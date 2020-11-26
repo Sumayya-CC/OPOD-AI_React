@@ -5,7 +5,7 @@ import TabSelect from './Components/TabSelect';
 function App() {
   return (
     <div>
-      <TabSelect/>
+      <TabSelect />
     </div>
   );
 }
