@@ -68,7 +68,7 @@ const useStyles = theme => ({
 
 
 var b = ['#E0E0E0', '#F7F8F8', '#F7F8F8'];      //offensive range colors
-var edit=[[],[],[]];                        //store 'edit' selected positions
+var edit = [[], [], []];                        //store 'edit' selected positions
 
 class TrainingData extends Component {
     constructor(props) {
@@ -76,8 +76,8 @@ class TrainingData extends Component {
         this.state = {
             category: ['Unparliamentary Words', 'Culturally Sensitive', 'Politically Sensitive',],
             wordCount: [0, 0, 0],
-            words: [[],[],[]],
-            offClassification: [[],[],[]],
+            words: [[], [], []],
+            offClassification: [[], [], []],
             Offensive: '',
             word: '',
             index: 0,
@@ -85,12 +85,12 @@ class TrainingData extends Component {
             editOffensive: [],
             reload: 0,
             data: {},
-            id: [[],[],[]]
+            id: [[], [], []]
         }
     }
-    componentWillUpdate() {
-        this.getData(1)
-    }
+    // componentWillUpdate() {
+    //     this.getData(1)
+    // }
 
     componentDidMount() {           //initial function
         this.getData(0);
@@ -158,25 +158,29 @@ class TrainingData extends Component {
         }
         if (!a) {                                            //initial setup, all edit selection false, edit data = training data
             edit = [[], [], []];
-            this.setState({editWords: words, editOffensive: offClassification})
+            this.setState({ editWords: words, editOffensive: offClassification })
             for (var k = 0; k < 3; k++) {
                 for (var j = 0; j < words[k].length; j++) {
                     edit[k] = edit[k].concat(false)
                 }
             }
-        }else{
+        } else {
             for (let index = 0; index < 3; index++) {       //updating non edit data
                 for (let inx = 0; inx < words[index].length; inx++) {
-                    if(!edit[index][inx]){
-                        this.setState({editWords: this.state.editWords.map((catWords,ix)=> ix!==index?catWords:  //finding the category
-                            catWords.map((word,indx)=> indx!==inx ?word :this.state.words[this.state.index][i])) })
-                        this.setState({editOffensive: this.state.editOffensive.map((catOffensive,ix)=> ix!==index?catOffensive:
-                            catOffensive.map((offensive,indx)=> indx!==inx ?offensive :this.state.offClassification[this.state.index][i])) })
+                    if (!edit[index][inx]) {
+                        this.setState({
+                            editWords: this.state.editWords.map((catWords, ix) => ix !== index ? catWords :  //finding the category
+                                catWords.map((word, indx) => indx !== inx ? word : words[index][inx]))
+                        })
+                        this.setState({
+                            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== index ? catOffensive :
+                                catOffensive.map((offensive, indx) => indx !== inx ? offensive : offClassification[index][inx]))
+                        })
                     }
                 }
             }
         }
-        this.setState({words: words, offClassification: offClassification, wordCount: wordCount,id: id})
+        this.setState({ words: words, offClassification: offClassification, wordCount: wordCount, id: id })
         console.log(words, offClassification, edit)
     }
 
@@ -197,10 +201,19 @@ class TrainingData extends Component {
         // this.state.wordCount[this.state.index] = this.state.wordCount[this.state.index] + 1
         // this.state.words[this.state.index] = this.state.words[this.state.index].concat(this.state.word)
         // this.state.offClassification[this.state.index] = this.state.offClassification[this.state.index].concat(this.state.Offensive)
-        // edit[this.state.index] = edit[this.state.index].concat(false)
+        edit[this.state.index] = edit[this.state.index].concat(false);
+        this.setState({
+            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
+                catWords.concat(this.state.word))
+        })
+        this.setState({
+            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
+                catOffensive.concat(this.state.Offensive))
+        })
         // this.state.editWords[this.state.index] = this.state.editWords[this.state.index].concat(this.state.word)
         // this.state.editOffensive[this.state.index] = this.state.editOffensive[this.state.index].concat(this.state.Offensive)
         // this.forceUpdate();
+            this.setState({ reload: 1 })
         this.getData(1)
         console.log(this.state.wordCount, this.state.words, this.state.offClassification);
         this.setState({ word: '', Offensive: '' })          //resetting handle change values
@@ -209,7 +222,7 @@ class TrainingData extends Component {
     }
 
     categorySelect = (index) => {                           //switching between categories
-        console.log(this.state.category[index]);
+        console.log(this.state.category[index], this.state.offClassification, this.state.editOffensive);
         for (var j = 0; j < 3; j++) {                       //changing the background color of selected category
             if (j === index) {
                 b[j] = '#E0E0E0';
@@ -263,16 +276,25 @@ class TrainingData extends Component {
             //         alert('error adding data')
             //         }
             // })
-            edit[this.state.index][i] = false               //'edit' selection false
-            this.setState({words: this.state.words.map((catWords,ix)=> ix!==this.state.index?catWords:   //finding the category
-                catWords.map((word,indx)=> indx!==i ?word :this.state.editWords[this.state.index][i])) })//updating the edit
-            this.setState({offClassification: this.state.offClassification.map((catOffensive,ix)=> ix!==this.state.index?catOffensive:
-                catOffensive.map((offensive,indx)=> indx!==i ?offensive :this.state.editOffensive[this.state.index][i])) })
+            edit[this.state.index][i] = false;               //'edit' selection false
+            this.setState({
+                words: this.state.words.map((catWords, ix) => ix !== this.state.index ? catWords :   //finding the category
+                    catWords.map((word, indx) => indx !== i ? word : this.state.editWords[this.state.index][i]))
+            })//updating the edit
+            this.setState({
+                offClassification: this.state.offClassification.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
+                    catOffensive.map((offensive, indx) => indx !== i ? offensive : this.state.editOffensive[this.state.index][i]))
+            })
+            // this.state.words[this.state.index][i] = this.state.editWords[this.state.index][i]
+            // this.state.offClassification[this.state.index][i] = this.state.editOffensive[this.state.index][i]
+            // this.forceUpdate();
+            this.getData(1)
+            this.getData(1)
             document.getElementById(this.state.index + " edit " + i).style.display = 'none';    //hiding the 'edit' button
         } else {                                            //'edit' selection
             console.log('edit ' + this.state.words[this.state.index][i]);
             edit[this.state.index][i] = true;                //'edit' selection true
-            this.setState({reload:1})
+            this.setState({ reload: 1 })
             document.getElementById(this.state.index + " edit " + i).style.display = 'inline';  //displaying the 'done' and cancel
         }
     }
@@ -285,22 +307,30 @@ class TrainingData extends Component {
     }
 
     onEditText = (i, event) => {                            //handle change - edit data
-        this.setState({editWords: this.state.editWords.map((catWords,ix)=> ix!==this.state.index?catWords:  //finding the category
-            catWords.map((word,indx)=> indx!==i ?word :event.target.value)) })
+        this.setState({
+            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
+                catWords.map((word, indx) => indx !== i ? word : event.target.value))
+        })
     }
 
     editSelect = (i, event) => {                            //offensive range selection - edit data
-        this.setState({editOffensive: this.state.editOffensive.map((catOffensive,ix)=> ix!==this.state.index?catOffensive:
-            catOffensive.map((offensive,indx)=> indx!==i ?offensive :event.target.value)) })
+        this.setState({
+            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
+                catOffensive.map((offensive, indx) => indx !== i ? offensive : event.target.value))
+        })
     }
 
     cancel = (i) => {                                       // cancel editing
         console.log('Cancel edit ' + this.state.words[this.state.index][i]);
-        edit[this.state.index][i] = false                   // 'edit' selection false
-        this.setState({editWords: this.state.editWords.map((catWords,ix)=> ix!==this.state.index?catWords:  //finding the category
-            catWords.map((word,indx)=> indx!==i ?word :this.state.words[this.state.index][i])) })
-        this.setState({editOffensive: this.state.editOffensive.map((catOffensive,ix)=> ix!==this.state.index?catOffensive:
-            catOffensive.map((offensive,indx)=> indx!==i ?offensive :this.state.offClassification[this.state.index][i])) })
+        edit[this.state.index][i] = false;                  // 'edit' selection false
+        this.setState({
+            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
+                catWords.map((word, indx) => indx !== i ? word : this.state.words[this.state.index][i]))
+        })
+        this.setState({
+            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
+                catOffensive.map((offensive, indx) => indx !== i ? offensive : this.state.offClassification[this.state.index][i]))
+        })
         // this.state.editWords[this.state.index][i] = this.state.words[this.state.index][i]
         // this.state.editOffensive[this.state.index][i] = this.state.offClassification[this.state.index][i]
         // this.forceUpdate();                                 //removing changes from the data
@@ -325,7 +355,7 @@ class TrainingData extends Component {
                                         float: 'right', color: '#0074B6',
                                         fontSize: '18px', flexDirection: 'column'
                                     }}>
-                                        {this.state.wordCount[i]}                           {/*displaying category word cout*/}
+                                        {this.state.wordCount[i]}                           {/*displaying category word count*/}
                                     </div>
                                 </ListItem>
                             ))}
@@ -354,8 +384,8 @@ class TrainingData extends Component {
                             </FormControl>
                             <Button type='submit' variant="contained" color='primary'        //Submit button
                                 style={{
-                                    border: 'none', width: '12.8%', height: 50,
-                                    textTransform: 'none', marginLeft: '1%'
+                                    border: 'none', width: '13%', height: 50,
+                                    textTransform: 'none', marginLeft: '1.3%'
                                 }}>
                                 Submit
                             </Button>
@@ -393,7 +423,7 @@ class TrainingData extends Component {
                                         {this.noEditing(i) ? 'Edit' : 'Done'}                   {/*display 'edit' for non edit, else 'done'*/}
                                     </Button>
                                     {this.noEditing(i) ? null : <IconButton size='small'
-                                            onClick={() => this.cancel(i)} >                    {/*display cancel with 'done'*/}
+                                        onClick={() => this.cancel(i)} >                    {/*display cancel with 'done'*/}
                                         <CancelIcon color='primary' fontSize='large'
                                             style={{ marginLeft: '1%', marginBottom: '-1%', marginTop: '0%' }} />
                                     </IconButton>

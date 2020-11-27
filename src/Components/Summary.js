@@ -75,21 +75,21 @@ class Summary extends Component {
                 Offensive| Occurances
               <List style={{ marginLeft: '2%', width: '90%', }}>
               {this.props.data.possible_profanity.map((listData, i) => (                              //Mapping all the profane words
-                <Accordion expanded={this.state.expanded === 'panel' + i}
+                <Accordion expanded={this.state.expanded === 'panel' + i} key={i}
                   onChange={this.handleChange('panel' + i)} square={true} elevation={0} style={{ border: 'none', }}>
-                  <AccordionSummary className={classes.expanded}
+                  <AccordionSummary className={classes.expanded} key={i}
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1bh-content"
                     id="panel1bh-header" style={{ backgroundColor: '#F2F2F2', marginBottom: '2%' }}>
                     <ListItemText key={i} style={{ backgroundColor: '#F2F2F2', paddingLeft: '2%' }}>
                       {listData} ({this.props.wordCount[i]})                                          {/*displaying profane words with count*/}
-                    <FiberManualRecordIcon fontSize='small' style={{ float: 'right', color: "#EC0000", }} />
+                    <FiberManualRecordIcon fontSize='small' key={i} style={{ float: 'right', color: "#EC0000", }} />
                     </ListItemText>
                   </AccordionSummary>
                   {this.props.pages[i].map((page, j) => (                                             //mapping all the profane words pages
-                    <AccordionDetails onClick={() => this.props.toPage(page)}>                        {/*on expansion displaying page no.*/}
-                      <Tooltip title={"Go to page " + page} arrow>                                    {/*on click - go to that age*/}
-                        <button key={i + ' ' + j} id={i + ' ' + j} className={classes.list}
+                    <AccordionDetails onClick={() => this.props.toPage(page)} key={i + '=' + j}>      {/*on expansion displaying page no.*/}
+                      <Tooltip title={"Go to page " + page} arrow>                                    
+                        <button key={i + '-' + j} id={i + ' ' + j} className={classes.list}
                           style={{
                             backgroundColor: '#E2E2E2', paddingLeft: '1%', width: '120%', textAlign: 'start',
                             marginLeft: '-8%', marginTop: '-4%', marginRight: '-8%', marginBottom: '-7%',
@@ -108,7 +108,7 @@ class Summary extends Component {
               <br />
             {/* No Occurance */}
             <List style={{ marginLeft: '2%', width: '90%', }}>
-              {this.props.data.possible_profanity.map((listData, i) => (                       //mapping all the profane words on this page
+              {this.props.data.possible_profanity.map((listData, i) => (                             //mapping all the profane words on this page
                 <ListItemText key={i} style={{ backgroundColor: '#F2F2F2', paddingLeft: '5%', paddingRight: '5%' }}>
                   {listData} ({this.props.pageWordCount[i]})
                   <FiberManualRecordIcon fontSize='small' style={{ float: 'right', color: '#EC0000', }} />

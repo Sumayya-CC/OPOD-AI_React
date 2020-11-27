@@ -91,11 +91,11 @@ class Report extends Component {
       totalPages: 1,
       selectedFile: null,
       report: false,
-      Summary:false,
+      Summary: false,
       data: '',
       line_analysis: [],
       lines: [],
-      firstLine:[],
+      firstLine: [],
       classification: '',
       probability: 0,
       possible_profanity: [],
@@ -114,40 +114,40 @@ class Report extends Component {
       selected_text: '',
       range: '',
       category: '',
-      inDisable:false,
+      inDisable: false,
 
     }
   }
 
   resize = () => {
     console.log('resize')
-    if(this.state.report){
+    if (this.state.report) {
       var page = document.getElementById("highlight");
-      page.style.height='unset';
+      page.style.height = 'unset';
       // if(page.scrollHeight>435){
-        // page.style.overflow='scroll';
+      // page.style.overflow='scroll';
       // }else{
       //   page.style.overflow='unset';
       // }
     }
-  //   if(this.state.report){
-  //   this.setState({firstLine: this.pagination(this.state.lines)
-  //   }, () => {
-  //     this.setState({ wordCount: this.wordCounting(this.state.text_tagged, this.state.possible_profanity) })
-  //     this.setState({ totalPages: this.state.firstLine.length });
-  //     this.setState({ pages: this.wordPage() })
-  //     this.lineColor(1); //report color code and highlighter
-  //   })
-  // }
+    //   if(this.state.report){
+    //   this.setState({firstLine: this.pagination(this.state.lines)
+    //   }, () => {
+    //     this.setState({ wordCount: this.wordCounting(this.state.text_tagged, this.state.possible_profanity) })
+    //     this.setState({ totalPages: this.state.firstLine.length });
+    //     this.setState({ pages: this.wordPage() })
+    //     this.lineColor(1); //report color code and highlighter
+    //   })
+    // }
   }
 
-componentDidMount() {
-  window.addEventListener('resize', this.resize)
-}
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+  }
 
-componentWillUnmount() {
-  window.removeEventListener('resize', this.resize)
-}
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
 
   onHandleChange = event => {
     this.setState({ inputText: event.target.value }) //input value
@@ -156,7 +156,7 @@ componentWillUnmount() {
 
   onSubmit = event => {
     event.preventDefault();
-    this.setState({inDisable:true})
+    this.setState({ inDisable: true })
     if (this.state.inputText === '') {
       console.log('No text available for analysis')
       alert('Please upload the text file');
@@ -184,7 +184,8 @@ componentWillUnmount() {
           // var l = (this.state.lines.length - 1) ? this.state.line_analysis.length : 1;
           // var p = Math.floor(l / 15);
           this.setState({ report: true }, () => {
-            this.setState({firstLine: this.pagination(this.state.lines)
+            this.setState({
+              firstLine: this.pagination(this.state.lines)
             }, () => {
               this.setState({ wordCount: this.wordCounting(this.state.text_tagged, this.state.possible_profanity) })
               this.setState({ totalPages: this.state.firstLine.length });
@@ -222,26 +223,26 @@ componentWillUnmount() {
     return color;
   }
 
-  pagination = (lines) =>{
-    var arr, line, firstLine=[];
-    firstLine=firstLine.concat(0);
+  pagination = (lines) => {
+    var arr, line, firstLine = [];
+    firstLine = firstLine.concat(0);
     var page = document.getElementById("highlight");
     for (let k = 0; k < lines.length; k++) {
       arr = this.state.lines[k].split(/\[(.*?)\]\(possible profanity\)/);
-      line=arr.reduce((prev, current)=>{
+      line = arr.reduce((prev, current) => {
         return prev.concat(current);
       }, [])
-      if(page.scrollHeight<=page.offsetHeight){  
+      if (page.scrollHeight <= page.offsetHeight) {
         page.innerHTML += line + ".";
-      }else{
+      } else {
         k--;
         console.log(k)
-        firstLine=firstLine.concat(k);
-        page.innerHTML='';
+        firstLine = firstLine.concat(k);
+        page.innerHTML = '';
       }
     }
-    page.innerHTML='';
-    page.style.height='unset';
+    page.innerHTML = '';
+    page.style.height = 'unset';
     return firstLine;
   }
 
@@ -267,7 +268,7 @@ componentWillUnmount() {
   appendToLastPage = (line) => {
     var page = document.getElementsByClassName("page")[document.getElementsByClassName("page").length - 1]; // gets the last page
     var pageText = page.innerHTML; // gets the text from the last page
-    page.innerHTML += line ; // saves the text of the last page
+    page.innerHTML += line; // saves the text of the last page
     if (page.offsetHeight < page.scrollHeight) { // checks if the page overflows (more words than space)
       page.innerHTML = pageText; //resets the page-text
       return false; // returns false because page is full
@@ -288,7 +289,7 @@ componentWillUnmount() {
       wordCount = wordCount.concat(0);
     }
 
-    if (this.state.firstLine.length === p ) {
+    if (this.state.firstLine.length === p) {
       last = this.state.lines.length;
     } else {
       last = this.state.firstLine[p];
@@ -297,7 +298,7 @@ componentWillUnmount() {
     if (this.state.lines.length - 1) {
       // let k=(p-1)*15
       // for (let k = (p - 1) * 15; k < l; k++) {
-        // while(page.scrollHeight<=page.offsetHeight){
+      // while(page.scrollHeight<=page.offsetHeight){
       for (let k = this.state.firstLine[p - 1]; k < last; k++) {
         c = this.colorCode(this.state.line_analysis[k].classification, this.state.line_analysis[k].probability * 100, 0) //color for lines
         b = this.colorCode(this.state.line_analysis[k].classification, this.state.line_analysis[k].probability * 100, 1)
@@ -421,18 +422,19 @@ componentWillUnmount() {
     for (let i = 0; i < words.length; i++) {
       pages = pages.concat([[]]);
     }
-    function paging(k, firstLine){
-      for(let p=firstLine.length-1; p>=0; p--){
-      if(firstLine[p]<=k){
-        return p+1;
+    function paging(k, firstLine) {
+      for (let p = firstLine.length - 1; p >= 0; p--) {
+        if (firstLine[p] <= k) {
+          return p + 1;
+        }
       }
-    }}
+    }
     for (let k = 0; k < this.state.lines.length; k++) {
       arr = this.state.lines[k].split(/\[(.*?)\]\(possible profanity\)/);
       for (let i = 0; i < arr.length; i++) {
         for (let j = 0; j < words.length; j++) {
           if (arr[i] === words[j]) {
-            page = paging(k, this.state.firstLine); 
+            page = paging(k, this.state.firstLine);
             pages[j] = pages[j].concat(page)
           }
         }
@@ -463,8 +465,8 @@ componentWillUnmount() {
 
 
   handleMouseUp = () => {
-    var text=window.getSelection().toString();
-    if(text.match(/^ *$/) == null){
+    var text = window.getSelection().toString();
+    if (text.match(/^ *$/) == null) {
       console.log('Selected text:' + text);
       this.setState({ selected_text: text });
       this.setState({ select: true });
@@ -476,21 +478,23 @@ componentWillUnmount() {
   }
 
   addTraining = (range, category) => {
-    this.setState({range: range, category: category })
+    this.setState({ range: range, category: category })
     console.log(this.state.selected_text + ' ' + range + ' ' + category)
-    axios.post(API.Add_Training,JSON.stringify({ "text": this.state.selected_text,
-    "category": range,
-    "offensive": category}) , 
-            { headers: {  "Content-Type": "application/json"  }})
+    axios.post(API.Add_Training, JSON.stringify({
+      "text": this.state.selected_text,
+      "category": category,
+      "offensive": range
+    }),
+      { headers: { "Content-Type": "application/json" } })
       .then(res => (res.data))
       .then((data) => {
-        if(data.status===200){
+        if (data.status === 200) {
           alert('Training data added')
-        }else{
+        } else {
           alert('error adding data')
         }
       })
-      this.setState({ select: false})
+    this.setState({ select: false })
   }
 
   closeTraining = () => {
@@ -544,7 +548,7 @@ componentWillUnmount() {
       )
     }
 
-    if(this.state.report){
+    if (this.state.report) {
       text = (
         <div>
           <div>
@@ -570,10 +574,10 @@ componentWillUnmount() {
             background: '#FFFFFF', borderWidth: 1, borderColor: '#E2E2E2', borderStyle: 'solid',
           }} >
             <MuiThemeProvider theme={theme}>
-              <Tooltip title={<span style={{ fontSize: '16px' }}>Select text for add to training data</span>} placement='top' arrow TransitionComponent={Zoom} className={classes.tooltip}>
+              <Tooltip title={<span style={{ fontSize: '16px' }}>Select text for add to training data</span>} placement='top' arrow className={classes.tooltip}>
                 <div style={{
-                  whiteSpace: 'pre-wrap', marginTop: '1%', marginRight: '1%', marginLeft: '1%', marginBottom: '1%', background:'#ffffff',
-                  height: 435, 
+                  whiteSpace: 'pre-wrap', marginTop: '1%', marginRight: '1%', marginLeft: '1%', marginBottom: '1%', background: '#ffffff',
+                  height: 435,
                   overflow: 'unset',
                 }}
                   onMouseUp={this.handleMouseUp} id='highlight'>{highlighted}</div>
@@ -597,7 +601,7 @@ componentWillUnmount() {
           </div>
         </div>
       );
-    }else{
+    } else {
       text = (
         <form onSubmit={this.onSubmit}>
           <div>
@@ -623,13 +627,13 @@ componentWillUnmount() {
             required
             InputLabelProps={{ required: false, }}
             className={classes.textField}
-            style={{ height: 450 }} 
-            disabled={this.state.inDisable}/>
+            style={{ height: 450 }}
+            disabled={this.state.inDisable} />
 
         </form>
       );
     }
-    
+
     if (this.state.summary) {      //Display the report only after clicking the submit button
       if (this.state.select) {
         summary1 = (
