@@ -12,8 +12,8 @@ import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import Tooltip from '@material-ui/core/Tooltip';
 import Zoom from '@material-ui/core/Zoom';
-// import jsxToString from 'jsx-to-string';
-// import { renderToString } from 'react-dom/server'
+import jsxToString from 'jsx-to-string';
+import { renderToString } from 'react-dom/server'
 import SelectedText from './SelectText';
 import * as API from './Api'
 
@@ -555,14 +555,14 @@ class Report extends Component {
             <b className="space" style={{ float: 'left', marginTop: '-6%', marginLeft: '-5%' }}>
               Profanity Detector
                 </b>
-            <Button variant="contained" disabled style={{
-              border: 'none',    //Submit button
-              width: '18%', height: 40, textTransform: 'none', float: 'right', marginRight: '4%', marginTop: '-5%'
+            <Button variant="contained" disabled style={{     //Submit button
+              border: 'none', width: '18%', height: 40, textTransform: 'none',
+              float: 'right', marginRight: '4%', marginTop: '-5%'
             }}
               type='submit'> Check Profanity </Button>
             <div style={{
-              backgroundColor: "none", color: "#000000",
-              width: '18%', height: 40, textTransform: 'none', float: 'right', marginRight: '20%', marginTop: '-5%'
+              backgroundColor: "none", color: "#000000", width: '18%', height: 40,
+              textTransform: 'none', float: 'right', marginRight: '20%', marginTop: '-5%'
             }}>
               <PublishIcon style={{ marginLeft: "0%", color: "black", marginRight: '2%', }} />
                   Upload File
@@ -574,9 +574,11 @@ class Report extends Component {
             background: '#FFFFFF', borderWidth: 1, borderColor: '#E2E2E2', borderStyle: 'solid',
           }} >
             <MuiThemeProvider theme={theme}>
-              <Tooltip title={<span style={{ fontSize: '16px' }}>Select text for add to training data</span>} placement='top' arrow className={classes.tooltip}>
+              <Tooltip title={<span style={{ fontSize: '16px' }}>Select text for add to training data</span>}
+                placement='top' arrow className={classes.tooltip}>
                 <div style={{
-                  whiteSpace: 'pre-wrap', marginTop: '1%', marginRight: '1%', marginLeft: '1%', marginBottom: '1%', background: '#ffffff',
+                  whiteSpace: 'pre-wrap', marginTop: '1%', marginRight: '1%',
+                  marginLeft: '1%', marginBottom: '1%', background: '#ffffff',
                   height: 435,
                   overflow: 'unset',
                 }}
@@ -637,14 +639,16 @@ class Report extends Component {
     if (this.state.summary) {      //Display the report only after clicking the submit button
       if (this.state.select) {
         summary1 = (
-          <SelectedText selected_text={this.state.selected_text} changeSelect={this.changeSelect}
-            addTraining={this.addTraining} closeTraining={this.closeTraining} />
+          <SelectedText selected_text={this.state.selected_text}
+            changeSelect={this.changeSelect} addTraining={this.addTraining}
+            closeTraining={this.closeTraining} />
         );
       }
       else {
         summary1 = (
-          <Summary data={this.state.data} color={this.state.color} pages={this.state.pages}
-            wordCount={this.state.wordCount} pageWordCount={this.state.pageWordCount} toPage={this.toPage} />
+          <Summary data={this.state.data} color={this.state.color}
+            pages={this.state.pages} wordCount={this.state.wordCount}
+            pageWordCount={this.state.pageWordCount} toPage={this.toPage} />
         );
 
       }

@@ -88,9 +88,9 @@ class TrainingData extends Component {
             id: [[], [], []]
         }
     }
-    // componentWillUpdate() {
-    //     this.getData(1)
-    // }
+    componentWillUpdate() {
+        this.getData(1)
+    }
 
     componentDidMount() {           //initial function
         this.getData(0);
@@ -136,6 +136,7 @@ class TrainingData extends Component {
         console.log(data)
         console.log(data.length)
         var words = [[], [], []], offClassification = [[], [], []], id = [[], [], []], wordCount = [];
+        var editWords = [[],[],[]], editOffensive= [[],[],[]];
         for (var i = 0; i < data.length; i++) {                                         //recurring through every training data
             if (data[i].category === 'Unparliamentary Words') {                         //1st category
                 words[0] = words[0].concat(data[i].text)
@@ -158,29 +159,39 @@ class TrainingData extends Component {
         }
         if (!a) {                                            //initial setup, all edit selection false, edit data = training data
             edit = [[], [], []];
-            this.setState({ editWords: words, editOffensive: offClassification })
+            editWords= words;
+            editOffensive=offClassification;
             for (var k = 0; k < 3; k++) {
                 for (var j = 0; j < words[k].length; j++) {
                     edit[k] = edit[k].concat(false)
                 }
             }
         } else {
+            editWords=this.state.editWords;
+            editOffensive= this.state.editOffensive;
             for (let index = 0; index < 3; index++) {       //updating non edit data
-                for (let inx = 0; inx < words[index].length; inx++) {
+                edit[index].splice(words[index].length)
+                editWords[index].splice(words[index].length)
+                editOffensive[index].splice(words[index].length)
+                if(words[index].length>edit[index].length){
+                    for(let ex=edit[index].length; ex<words[index].length; ex++){
+                        edit[index] = edit[index].concat(false)
+                        editWords[index]=editWords[index].concat(words[index][ex])
+                        editOffensive[index]=editOffensive[index].concat(offClassification[index][ex])
+                    }
+                }
+                for (let inx = 0; inx < edit[index].length; inx++) {
                     if (!edit[index][inx]) {
-                        this.setState({
-                            editWords: this.state.editWords.map((catWords, ix) => ix !== index ? catWords :  //finding the category
-                                catWords.map((word, indx) => indx !== inx ? word : words[index][inx]))
-                        })
-                        this.setState({
-                            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== index ? catOffensive :
-                                catOffensive.map((offensive, indx) => indx !== inx ? offensive : offClassification[index][inx]))
-                        })
+                        editWords= editWords.map((catWords, ix) => ix !== index ? catWords :  //finding the category
+                            catWords.map((word, indx) => indx !== inx ? word : words[index][inx]))
+                        editOffensive=editOffensive.map((catOffensive, ix) => ix !== index ? catOffensive :
+                            catOffensive.map((offensive, indx) => indx !== inx ? offensive : offClassification[index][inx]))
                     }
                 }
             }
         }
-        this.setState({ words: words, offClassification: offClassification, wordCount: wordCount, id: id })
+        this.setState({ words: words, offClassification: offClassification, wordCount: wordCount, id: id,
+        editOffensive: editOffensive, editWords: editWords })
         console.log(words, offClassification, edit)
     }
 
