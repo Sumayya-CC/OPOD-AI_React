@@ -44,7 +44,7 @@ class Summary extends Component {
 
 
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props;                     // with styles classes
 
     return (
       <div>

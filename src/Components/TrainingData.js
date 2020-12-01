@@ -91,15 +91,15 @@ class TrainingData extends Component {
     }
 
     getData = (a) => {
-        axios.get(API.Add_Training)                                   //get all training data to display
+        axios.get(API.Add_Training)                                     //get all training data to display
             .then(response => {
                 var data = response.data.payload
                 console.log(data)
                 var trData = [[], [], []], edData = [[], [], []], textCount = [], c;
                 for (var i = 0; i < data.length; i++) {
-                    for (var catg = 0; catg < 3; catg++) {           //recurring through every training data
-                        if (data[i].category === this.state.category[catg]) {      //category 
-                            c = catg;
+                    for (var catg = 0; catg < 3; catg++) {              //recurring through every training data
+                        if (data[i].category === this.state.category[catg]) {       
+                            c = catg;                                   //category
                         }
                     }
                     trData[c] = trData[c].concat([{
@@ -108,7 +108,7 @@ class TrainingData extends Component {
                     }])
                 }
                 for (let ct = 0; ct < 3; ct++) {
-                    textCount = textCount.concat(trData[ct].length)  //data count in each categories
+                    textCount = textCount.concat(trData[ct].length)     //data count in each categories
                 }
                 if (!a) {                      //initial setup, all edit selection false, edit data = training data
                     for (var k = 0; k < 3; k++) {
@@ -157,7 +157,7 @@ class TrainingData extends Component {
             { headers: { "Content-Type": "application/json" } })
             .then(res => (res.data))
             .then((data) => {
-                if (!data.status == 200) {
+                if (data.status !== 200) {
                     alert('error adding data')
                 }
             })
@@ -207,7 +207,7 @@ class TrainingData extends Component {
     }
 
     edit = (i) => {
-        if (this.state.edData[this.state.index][i].edit) {                    //cheching whether 'done' button or not
+        if (this.state.edData[this.state.index][i].edit) {               //cheching whether 'done' button or not
             //     axios.put(API.Add_Training,{ params: {id:this.state.edData[this.state.index][i].id}},
             //         JSON.stringify({ "text": this.state.edData[this.state.index][i].text,
             //     "offensive": this.state.edData[this.state.index][i].offensive,
@@ -220,7 +220,7 @@ class TrainingData extends Component {
             //         }
             // })      
             this.setState({
-                trData: this.state.trData.map((catData, ix) => ix !== this.state.index ? catData :   //finding the category
+                trData: this.state.trData.map((catData, ix) => ix !== this.state.index ? catData :      //finding the category
                     catData.map((data, indx) => indx !== i ? data : {
                         ...data, text: this.state.edData[this.state.index][i].text,
                         offensive: this.state.edData[this.state.index][i].offensive
@@ -228,20 +228,20 @@ class TrainingData extends Component {
                 edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :      //'edit' selection false
                     catData.map((data, indx) => indx !== i ? data : { ...data, edit: false })),
             })
-            document.getElementById(this.state.index + " edit " + i).style.display = 'none';    //hiding the 'edit' button
+            document.getElementById(this.state.index + " edit " + i).style.display = 'none';            //hiding the 'edit' button
         }
-        else {                                                                                //'edit' selection
+        else {                                                                                          //'edit' selection
             console.log('edit ' + this.state.trData[this.state.index][i].text);
             this.setState({
                 edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :      //'edit' selection true
                     catData.map((data, indx) => indx !== i ? data : { ...data, edit: true })),
             })
-            document.getElementById(this.state.index + " edit " + i).style.display = 'inline';  //displaying the 'done' and cancel
+            document.getElementById(this.state.index + " edit " + i).style.display = 'inline';          //displaying the 'done' and cancel
         }
     }
 
     noEditing = (i) => {
-        if (this.state.edData[this.state.index][i].edit) {                    //return false for edit selected data
+        if (this.state.edData[this.state.index][i].edit) {  //return false for edit selected data
             return false;
         }
         return true;
@@ -263,14 +263,14 @@ class TrainingData extends Component {
 
     cancel = (i) => {                                       // cancel editing
         console.log('Cancel edit ' + this.state.trData[this.state.index][i].text);
-        this.setState({                             //edit false, edit data= training data
+        this.setState({                                     //edit false, edit data= training data
             edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :
                 catData.map((data, indx) => indx !== i ? data : {
                     ...data, edit: false, text: this.state.trData[this.state.index][i].text,
                     offensive: this.state.trData[this.state.index][i].offensive
                 })),
         })
-        document.getElementById(this.state.index + " edit " + i).style.display = 'none';    //hide 'edit' button
+        document.getElementById(this.state.index + " edit " + i).style.display = 'none';        //hide 'edit' button
     }
 
 
@@ -283,15 +283,15 @@ class TrainingData extends Component {
                     <h4 style={{ float: 'left', marginLeft: '4%', marginTop: '0.25%' }}>Categories</h4>
                     <div style={{ width: '17%', float: 'left', marginTop: '3%', marginLeft: '-6.5%' }}>
                         <List className={classes.root}>
-                            {this.state.category.map((listData, i) => (                     //mapping categories
+                            {this.state.category.map((listData, i) => (                         //mapping categories
                                 <ListItem onClick={() => this.categorySelect(i)}
                                     style={{ height: 45, backgroundColor: b[i] }} key={i}>
-                                    <ListItemText key={i} primary={listData} />              {/*listing categories*/}
+                                    <ListItemText key={i} primary={listData} />                 {/*listing categories*/}
                                     <div key={i + 100} style={{
                                         float: 'right', color: '#0074B6',
                                         fontSize: '18px', flexDirection: 'column'
                                     }}>
-                                        {this.state.textCount[i]}                          {/*displaying category text count */}
+                                        {this.state.textCount[i]}                               {/*displaying category text count */}
                                     </div>
                                 </ListItem>
                             ))}
@@ -299,18 +299,18 @@ class TrainingData extends Component {
                     </div>
                 </div>
 
-                <div style={{ marginLeft: '24%' }}>                                           {/*data section*/}
+                <div style={{ marginLeft: '24%' }}>                                             {/*data section*/}
                     <h4 style={{ marginTop: '3%', marginBottom: '1%' }}>Training Data</h4>
                     <div style={{ marginBottom: '2%' }}>
-                        <form onSubmit={this.onSubmit}>                                     {/*add new data form*/}
-                            <TextField style={{ width: '49.8%', backgroundColor: 'white' }}   //input text
+                        <form onSubmit={this.onSubmit}>                                         {/*add new data form*/}
+                            <TextField style={{ width: '49.8%', backgroundColor: 'white' }}     //input text
                                 className={classes.textField} variant='standard'
                                 label=" + Add text to classify"
-                                required InputLabelProps={{ required: false }}               //required field, hide '*'
+                                required InputLabelProps={{ required: false }}                  //required field, hide '*'
                                 value={this.state.text} onChange={this.onHandleChange} />
-                            <FormControl className={classes.formControl} className={classes.textField}
+                            <FormControl className={classes.textField}
                                 style={{ backgroundColor: 'white', width: '19.8%', marginLeft: '1%', marginTop: '0%' }}
-                                variant='standard' color='primary'>                         {/*offenive range selection*/}
+                                variant='standard' color='primary'>                             {/*offenive range selection*/}
                                 <InputLabel style={{ color: '#0074B6' }}>Select Offensive Range</InputLabel>
                                 <Select value={this.state.Offensive} onChange={this.handleSelect} required>
                                     <MenuItem value={'Lightly Offensive'}>Lightly Offensive</MenuItem>
@@ -318,7 +318,7 @@ class TrainingData extends Component {
                                     <MenuItem value={'Extremely Offensive'}>Extremely Offensive</MenuItem>
                                 </Select>
                             </FormControl>
-                            <Button type='submit' variant="contained" color='primary'        //Submit button
+                            <Button type='submit' variant="contained" color='primary'           //Submit button
                                 style={{
                                     border: 'none', width: '13%', height: 50,
                                     textTransform: 'none', marginLeft: '1.3%'
@@ -328,11 +328,11 @@ class TrainingData extends Component {
                         </form>
                     </div>
 
-                    <div style={{ marginTop: '-1.5%' }}>                                      {/*edit data section*/}
-                        {this.state.edData[this.state.index].map((data, i) => (              //mapping training data in the selected category
+                    <div style={{ marginTop: '-1.5%' }}>                                        {/*edit data section*/}
+                        {this.state.edData[this.state.index].map((data, i) => (                 //mapping training data in the selected category
                             <div key={i} onMouseOver={() => this.display(i)}
-                                onMouseOut={() => this.hide(i)}>                            {/*hiding and displaying of 'edit' button*/}
-                                <TextField variant="outlined" disabled={this.noEditing(i)}  //disabling non editing text field
+                                onMouseOut={() => this.hide(i)}>                                {/*hiding and displaying of 'edit' button*/}
+                                <TextField variant="outlined" disabled={this.noEditing(i)}      //disabling non editing text field
                                     onChange={(e) => this.onEditText(i, e)}
                                     value={this.state.edData[this.state.index][i].text}
                                     required InputLabelProps={{ required: false }}
@@ -359,7 +359,7 @@ class TrainingData extends Component {
                                         {this.noEditing(i) ? 'Edit' : 'Done'}                   {/*display 'edit' for non edit, else 'done'*/}
                                     </Button>
                                     {this.noEditing(i) ? null : <IconButton size='small'
-                                        onClick={() => this.cancel(i)} >                    {/*display cancel with 'done'*/}
+                                        onClick={() => this.cancel(i)} >                        {/*display cancel with 'done'*/}
                                         <CancelIcon color='primary' fontSize='large'
                                             style={{ marginLeft: '1%', marginBottom: '-1%', marginTop: '0%' }} />
                                     </IconButton>
