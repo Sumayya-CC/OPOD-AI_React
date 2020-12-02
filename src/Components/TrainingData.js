@@ -98,7 +98,7 @@ class TrainingData extends Component {
                 var trData = [[], [], []], edData = [[], [], []], textCount = [], c;
                 for (var i = 0; i < data.length; i++) {
                     for (var catg = 0; catg < 3; catg++) {              //recurring through every training data
-                        if (data[i].category === this.state.category[catg]) {       
+                        if (data[i].category === this.state.category[catg]) {
                             c = catg;                                   //category
                         }
                     }
@@ -149,17 +149,34 @@ class TrainingData extends Component {
 
     onSubmit = event => {
         event.preventDefault();
-        axios.post(API.Add_Training, JSON.stringify({        //add training data
+        console.log('submit')
+        axios.post(API.Save_TrainingData, JSON.stringify([{        //add training data
+            "text": this.state.text,
+            "category": this.state.category[this.state.index],
+            "offensive": this.state.Offensive
+        }]),
+            { headers: { "Content-Type": "application/json" } })
+            .then(res => (res.data))
+            .then((data) => {
+                console.log(data)
+                if (data.message !== 'success') {
+                    alert('error adding data')
+                }
+            })
+        axios.post(API.Add_Training, JSON.stringify({        //add training data mock
             "text": this.state.text,
             "offensive": this.state.Offensive,
             "category": this.state.category[this.state.index]
         }),
-            { headers: { "Content-Type": "application/json" } })
-            .then(res => (res.data))
-            .then((data) => {
-                if (data.status !== 200) {
-                    alert('error adding data')
-                }
+            {
+                headers: { "Content-Type": "application/json" }
+            })
+        axios.post(API.Reload_TrainingData, JSON.stringify({//reload training data
+            "custom_profanity": true,
+            "model": false
+        }),
+            {
+                headers: { "Content-Type": "application/json" }
             })
         this.setState({ text: '', Offensive: '' })          //resetting handle change values
 
@@ -207,18 +224,20 @@ class TrainingData extends Component {
     }
 
     edit = (i) => {
-        if (this.state.edData[this.state.index][i].edit) {               //cheching whether 'done' button or not
-            //     axios.put(API.Add_Training,{ params: {id:this.state.edData[this.state.index][i].id}},
-            //         JSON.stringify({ "text": this.state.edData[this.state.index][i].text,
-            //     "offensive": this.state.edData[this.state.index][i].offensive,
-            //     "category": this.state.category[this.state.index]}) , 
-            //             { headers: {  "Content-Type": "application/json"  }})
-            //     .then(res => (res.data))
-            //     .then((data) => {
-            //         if(!data.status===200){
-            //         alert('error adding data')
-            //         }
-            // })      
+        if (this.state.edData[this.state.index][i].edit) {               //cheching whether 'done' button or not 
+            // axios.post(API.Save_TrainingData, JSON.stringify([{     //edit training data
+            //     "text": this.state.edData[this.state.index][i].text,
+            //     "category": this.state.category[this.state.index]}),
+            //     "offensive": this.state.edData[this.state.index][i].offensive
+            // }]),
+            //     { headers: { "Content-Type": "application/json" } })
+            // axios.post(API.Reload_TrainingData, JSON.stringify({    //reload training data
+            //     "custom_profanity": true,
+            //     "model": false
+            // }),
+            //     {
+            //         headers: { "Content-Type": "application/json" }
+            //     })
             this.setState({
                 trData: this.state.trData.map((catData, ix) => ix !== this.state.index ? catData :      //finding the category
                     catData.map((data, indx) => indx !== i ? data : {

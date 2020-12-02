@@ -416,19 +416,34 @@ class Report extends Component {
 
   addTraining = (offRange, category) => {             //add training data into the database
     this.setState({ offRange: offRange, category: category })
-    axios.post(API.Add_Training, JSON.stringify({     //add training data API call
+    axios.post(API.Add_Training, JSON.stringify({     //add training data mock API call
       "text": this.state.selected_text,
       "category": category,
       "offensive": offRange
     }),
+      {
+        headers: { "Content-Type": "application/json" }
+      })
+    axios.post(API.Save_TrainingData, JSON.stringify([{     //add training data API call
+      "text": this.state.selected_text,
+      "category": category,
+      "offensive": offRange
+    }]),
       { headers: { "Content-Type": "application/json" } })
       .then(res => (res.data))
       .then((data) => {
-        if (data.status === 200) {
+        if (data.message === 'success') {
           alert('Training data added')
         } else {
           alert('error adding data')
         }
+      })
+    axios.post(API.Reload_TrainingData, JSON.stringify({//reload training data
+      "custom_profanity": true,
+      "model": false
+    }),
+      {
+        headers: { "Content-Type": "application/json" }
       })
     this.setState({ select: false })                  //hide SelectText 
   }
@@ -525,7 +540,7 @@ class Report extends Component {
             </MuiThemeProvider>
           </div>
 
-                  {/*paging*/}
+          {/*paging*/}
           <div className="pages" style={{ float: 'right', marginRight: '7.5%' }}>
             {prevB}
 
