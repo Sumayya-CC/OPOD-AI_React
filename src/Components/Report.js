@@ -416,7 +416,7 @@ class Report extends Component {
 
   addTraining = (offRange, category) => {             //add training data into the database
     this.setState({ offRange: offRange, category: category })
-    axios.post(API.Add_Training, JSON.stringify({     //add training data mock API call
+    axios.post(API.Save_TrainingData, JSON.stringify({     //add training data mock API call
       "text": this.state.selected_text,
       "category": category,
       "offensive": offRange
@@ -424,11 +424,11 @@ class Report extends Component {
       {
         headers: { "Content-Type": "application/json" }
       })
-    axios.post(API.Save_TrainingData, JSON.stringify([{     //add training data API call
+    axios.post(API.Add_Training, JSON.stringify({     //add training data API call
       "text": this.state.selected_text,
       "category": category,
       "offensive": offRange
-    }]),
+    }),
       { headers: { "Content-Type": "application/json" } })
       .then(res => (res.data))
       .then((data) => {
@@ -438,10 +438,10 @@ class Report extends Component {
           alert('error adding data')
         }
       })
-    axios.post(API.Reload_TrainingData, JSON.stringify({//reload training data
+    axios.post(API.Reload_TrainingData, JSON.stringify([{//reload training data
       "custom_profanity": true,
       "model": false
-    }),
+    }]),
       {
         headers: { "Content-Type": "application/json" }
       })
