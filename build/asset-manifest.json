@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.70b94349.chunk.css",
+    "main.js": "/static/js/main.3030f634.chunk.js",
+    "main.js.map": "/static/js/main.3030f634.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.5c340a08.js",
+    "runtime-main.js.map": "/static/js/runtime-main.5c340a08.js.map",
+    "static/js/2.747d1cde.chunk.js": "/static/js/2.747d1cde.chunk.js",
+    "static/js/2.747d1cde.chunk.js.map": "/static/js/2.747d1cde.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.c9c43e2b88ef68d3f74b312883772976.js": "/precache-manifest.c9c43e2b88ef68d3f74b312883772976.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.70b94349.chunk.css.map": "/static/css/main.70b94349.chunk.css.map",
+    "static/js/2.747d1cde.chunk.js.LICENSE.txt": "/static/js/2.747d1cde.chunk.js.LICENSE.txt",
+    "static/media/tarentologo.png": "/static/media/tarentologo.d0a152fe.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5c340a08.js",
+    "static/js/2.747d1cde.chunk.js",
+    "static/css/main.70b94349.chunk.css",
+    "static/js/main.3030f634.chunk.js"
+  ]
+}
