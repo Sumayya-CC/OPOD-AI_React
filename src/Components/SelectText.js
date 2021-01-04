@@ -37,30 +37,28 @@ class SelectedText extends Component {
         super(props);
         this.state = {
             category: '',
-            range: "Offensive",
+            offRange: "Offensive",
 
         }
     }
 
 
-    handleSelect = event => {
+    handleSelect = event => {                                           //text handling
         this.setState({ category: event.target.value })
-        console.log(event.target.value)
     }
 
-    handleRange = event => {
-        this.setState({ range: event.target.value })
-        console.log(event.target.value)
+    handleRange = event => {                                            //offensive range selection
+        this.setState({ offRange: event.target.value })
     }
 
-    addTrainingData = event => {
+    addTrainingData = event => {                                       //add training data (function in Report.js)
         event.preventDefault();
-        this.props.addTraining(this.state.range, this.state.category);
+        this.props.addTraining(this.state.offRange, this.state.category);
     }
 
 
     render() {
-        const { classes } = this.props;
+        const { classes } = this.props;                     // with styles classes
 
         return (
             <div align='justify'>
@@ -82,12 +80,12 @@ class SelectedText extends Component {
                             <h4 style={{ float: 'left', color: '#000000', marginTop: '3%', marginLeft: '3%' }}>
                                 Selected text
                             </h4>
-                            <IconButton className={"MyCustomButton"} style={{ float: 'right' }}
+                            <IconButton className={"MyCustomButton"} style={{ float: 'right' }}                         //close
                                 onClick={this.props.closeTraining}>
                                 <CloseIcon color='primary' />
                             </IconButton>
                             <TextField id="outlined-basic" value={this.props.selected_text} multiline
-                                rowsmin={2} variant="outlined" required InputLabelProps={{ required: false, }}
+                                rowsmin={2} variant="outlined" required InputLabelProps={{ required: false, }}          //text
                                 style={{ width: '90%', marginTop: '-3%', marginBottom: '3%', }}
                                 onChange={this.props.changeSelect} />
                         </div>
@@ -96,15 +94,15 @@ class SelectedText extends Component {
                             <h4 style={{ color: '#000000', marginTop: '3%', marginLeft: '3%', marginBottom: '-1%' }}>
                                 Offensive Range
                                 </h4>
-                            <div style={{ marginTop: '1%', marginLeft: '5%', width: '100%', }}>
+                            <div style={{ marginTop: '1%', marginLeft: '5%', width: '100%', }}>                         {/*offensive range*/}
                                 <FormControl component="fieldset">
                                     <RadioGroup aria-label="Offensiveness" name="Offensiveness"
-                                        value={this.state.range} onChange={this.handleRange}>
+                                        value={this.state.offRange} onChange={this.handleRange}>
                                         <div>
                                             <FormControlLabel value="Lightly Offensive"
                                                 control={<Radio color='primary' />} label='Lightly Offensive' />
                                             <FiberManualRecordIcon
-                                                style={{ color: '#E77100', float: "right", flexdirection: "coloumn" }} />
+                                                style={{ color: '#E77100', float: "right", flexdirection: "coloumn" }} />{/*offensive color*/}
                                         </div>
                                         <div>
                                             <FormControlLabel value="Offensive"
@@ -124,7 +122,7 @@ class SelectedText extends Component {
                         </div>
 
                         <div>
-                            <FormControl className={classes.formControl} variant="filled">
+                            <FormControl className={classes.formControl} variant="filled">                              {/*category selection*/}
                                 <InputLabel id="demo-simple-select-label">Select Category</InputLabel>
                                 <Select labelId="demo-simple-select-label" id="demo-simple-select" required
                                     value={this.state.category} onChange={this.handleSelect}>
@@ -137,7 +135,7 @@ class SelectedText extends Component {
 
                         <div>
                             <Button variant='outlined' color='primary' type='submit'
-                                style={{ textTransform: 'none', marginLeft: '5%', width: '90%' }} >
+                                style={{ textTransform: 'none', marginLeft: '5%', width: '90%' }} >                     {/*Submit button*/}
                                 Add to Training Data
                             </Button>
                         </div>

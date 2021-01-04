@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import { exportComponentAsJPEG } from "react-component-export-image";
+import { exportComponentAsPDF } from "react-component-export-image";
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -44,7 +44,7 @@ class Summary extends Component {
 
 
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props;                     // with styles classes
 
     return (
       <div>
@@ -52,7 +52,7 @@ class Summary extends Component {
           color: 'black', align: "center", marginTop: '-10%', marginRight: '33%',
           display: 'inline-flex', float: 'right'
         }}
-          onClick={() => exportComponentAsJPEG(this.exp)}>                                            {/*download summary*/}
+          onClick={() => exportComponentAsPDF(this.exp)}>                                            {/*download summary (incomplete)*/}
           <CloudDownloadIcon color='primary' style={{ marginLeft: "0%", marginRight: '5%' }} />
                 Export_Summary
           </div>

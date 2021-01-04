@@ -126,14 +126,14 @@ export default function TabSelect(props) {
 
           <TabPanel
             // value={value} index={0} dir={theme.direction}> 
-            hidden={value === 1}>             {/*displaying 1st tab by hiding 2nd tab*/}
-            <Report />
+            hidden={value === 1}>        {/*displaying 1st tab by hiding 2nd tab*/}
+            <Report />                   {/*Check profanity and display result*/}
           </TabPanel>
 
           <TabPanel
             // value={value} index={1} dir={theme.direction}> 
-            hidden={value === 0}>             {/*displaying 2nd tab by hiding 1st tab*/}
-            <TrainingData />
+            hidden={value === 0}>        {/*displaying 2nd tab by hiding 1st tab*/}
+            <TrainingData />             {/*adda nd edit training data set (incomplete)*/}
           </TabPanel>
 
         </SwipeableViews>

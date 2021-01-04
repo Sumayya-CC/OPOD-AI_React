@@ -38,7 +38,8 @@ class Upload extends Component {
     return (
       <div>
         <div style={{ marginTop: '1%', }}>
-          <DropzoneDialog style={{ width: '50%', height: '40%', background: '#0000FF' }}
+          <DropzoneDialog
+            style={{ width: '50%', height: '40%', background: '#0000FF' }}
             open={this.state.open}
             onSave={this.handleSave.bind(this)}
             acceptedFiles={[".txt", ".pdf"]}
@@ -52,11 +53,12 @@ class Upload extends Component {
             dropzoneText={"Drag & drop the file here OR"}
             dictDefaultMessage={"Upload PDF document"}
           />
-          <div onClick={this.handleOpen.bind(this)} style={{
-            backgroundColor: "none", color: "#000000",     //Submit button
-            width: '18%', height: 40, textTransform: 'none', float: 'right', marginRight: '-3%', marginTop: '1%'
+          <div onClick={this.handleOpen.bind(this)} style={{                //submit
+            backgroundColor: "none", color: "#000000", width: '18%', height: 40,
+            textTransform: 'none', float: 'right', marginRight: '-3%', marginTop: '1%'
           }}>
-            <PublishIcon color='primary' style={{ marginLeft: "0%", marginRight: '2%', marginTop: '2%' }} />
+            <PublishIcon color='primary'
+              style={{ marginLeft: "0%", marginRight: '2%', marginTop: '2%' }} />
               Upload File
             </div>
         </div>
@@ -66,6 +68,3 @@ class Upload extends Component {
 }
 
 export default Upload;
-
-
-

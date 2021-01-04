@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-// import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -68,24 +67,18 @@ const useStyles = theme => ({
 
 
 var b = ['#E0E0E0', '#F7F8F8', '#F7F8F8'];      //offensive range colors
-var edit = [[], [], []];                        //store 'edit' selected positions
 
 class TrainingData extends Component {
     constructor(props) {
         super(props);
         this.state = {
             category: ['Unparliamentary Words', 'Culturally Sensitive', 'Politically Sensitive',],
-            wordCount: [0, 0, 0],
-            words: [[], [], []],
-            offClassification: [[], [], []],
             Offensive: '',
-            word: '',
+            text: '',
             index: 0,
-            editWords: [],
-            editOffensive: [],
-            reload: 0,
-            data: {},
-            id: [[], [], []]
+            trData: [[], [], []],
+            textCount: [],
+            edData: [[], [], []],
         }
     }
     componentWillUpdate() {
@@ -94,146 +87,98 @@ class TrainingData extends Component {
 
     componentDidMount() {           //initial function
         this.getData(0);
-
-        // this.setState({
-        //     words: [['bribe', 'double-talk', 'racist', 'blackmail', 'blind',],
-        //     ['fuck', 'asshole', 'bitch', 'mofo', 'ho', 'bastard',],
-        //     ['dfs', 'ahd', 'kgf']],
-        //     offClassification: [['Offensive', 'Lightly Offensive', 'Extremely Offensive', 'Lightly Offensive', 'Offensive',],
-        //     ['Offensive', 'Lightly Offensive', 'Extremely Offensive', 'Offensive', 'Offensive', 'Lightly Offensive',],
-        //     ['Offensive', 'Lightly Offensive', 'Extremely Offensive',]],
-        //    });
-        // edit = [[false, false, false, false, false,],
-        // [false, false, false, false, false, false,],
-        // [false, false, false]];
-        // this.setState({
-        //     editWords: [['bribe', 'double-talk', 'racist', 'blackmail', 'blind',],
-        //     ['fuck', 'asshole', 'bitch', 'mofo', 'ho', 'bastard',],
-        //     ['dfs', 'ahd', 'kgf']],
-        //     editOffensive: [['Offensive', 'Lightly Offensive', 'Extremely Offensive', 'Lightly Offensive', 'Offensive',],
-        //     ['Offensive', 'Lightly Offensive', 'Extremely Offensive', 'Offensive', 'Offensive', 'Lightly Offensive',],
-        //     ['Offensive', 'Lightly Offensive', 'Extremely Offensive',]]
-        // });
-        // for(var i=0;i<this.state.words.length;i++){
-        //     edit=edit.concat([[]]);
-        //     for(var j=0; j<this.state.words[i].length;j++){
-        //         edit[i]=edit[i].concat(false)
-        //         this.forceUpdate();
-        //     }
-        // }
     }
 
     getData = (a) => {
-        axios.get(API.Add_Training)                                   //get all training data to display
+        axios.get(API.Add_Training)                                     //get all training data to display
             .then(response => {
-                this.setState({ data: response.data }, () => {        //function call immediate to state setting
-                    this.dataSet(this.state.data.payload, a)
-                });
+                var data = response.data.payload
+                var trData = [[], [], []], edData = [[], [], []], textCount = [], c;
+                for (var i = 0; i < data.length; i++) {
+                    for (var catg = 0; catg < 3; catg++) {              //recurring through every training data
+                        if (data[i].category === this.state.category[catg]) {
+                            c = catg;                                   //category
+                        }
+                    }
+                    trData[c] = trData[c].concat([{
+                        'id': data[i].id,
+                        'text': data[i].text, 'offensive': data[i].offensive
+                    }])
+                }
+                for (let ct = 0; ct < 3; ct++) {
+                    textCount = textCount.concat(trData[ct].length)     //data count in each categories
+                }
+                if (!a) {                      //initial setup, all edit selection false, edit data = training data
+                    for (var k = 0; k < 3; k++) {
+                        for (var j = 0; j < trData[k].length; j++) {
+                            edData[k] = edData[k].concat([{
+                                'id': trData[k][j].id, 'edit': false,
+                                'text': trData[k][j].text, 'offensive': trData[k][j].offensive
+                            }]);
+                        }
+                    }
+                } else {
+                    edData = this.state.edData;
+                    for (let index = 0; index < 3; index++) {                               //updating edit data
+                        let inx = 0;
+                        while (inx < edData[index].length && inx < trData[index].length) {
+                            if (trData[index][inx].id !== edData[index][inx].id) {          //comparing id
+                                edData[index].splice(inx, 1)                                //remove deleted data
+                            }
+                            if (!edData[index][inx].edit) {                                 //update non edit data
+                                edData[index][inx].text = trData[index][inx].text;
+                                edData[index][inx].offensive = trData[index][inx].offensive;
+                            }
+                            inx++;
+                        }
+                        edData[index].splice(trData[index].length)                          //remove deleted data at the end
+                        for (let ex = edData[index].length; ex < trData[index].length; ex++) {
+                            edData[index] = edData[index].concat([{                         //add new data
+                                'id': trData[index][ex].id, 'edit': false,
+                                'text': trData[index][ex].text, 'offensive': trData[index][ex].offensive
+                            }]);
+                        }
+                    }
+                }
+                this.setState({ trData: trData, edData: edData, textCount: textCount })
             });
-    }
-
-    dataSet = (data, a) => {
-        console.log(data)
-        console.log(data.length)
-        var words = [[], [], []], offClassification = [[], [], []], id = [[], [], []], wordCount = [];
-        var editWords = [[],[],[]], editOffensive= [[],[],[]];
-        for (var i = 0; i < data.length; i++) {                                         //recurring through every training data
-            if (data[i].category === 'Unparliamentary Words') {                         //1st category
-                words[0] = words[0].concat(data[i].text)
-                offClassification[0] = offClassification[0].concat(data[i].offensive)
-                id[0] = id[0].concat(data[i].id)
-            } else if (data[i].category === 'Culturally Sensitive') {                   //2nd category
-                words[1] = words[1].concat(data[i].text)
-                offClassification[1] = offClassification[1].concat(data[i].offensive)
-                id[1] = id[1].concat(data[i].id)
-            } else if (data[i].category === 'Politically Sensitive') {                  //3rd category                                     
-                words[2] = words[2].concat(data[i].text)
-                offClassification[2] = offClassification[2].concat(data[i].offensive)
-                id[2] = id[2].concat(data[i].id)
-            } else {
-                console.log('invalid category', data[i])
-            }
-        }
-        for (var c = 0; c < 3; c++) {
-            wordCount = wordCount.concat(words[c].length)    //data count in each categories
-        }
-        if (!a) {                                            //initial setup, all edit selection false, edit data = training data
-            edit = [[], [], []];
-            editWords= words;
-            editOffensive=offClassification;
-            for (var k = 0; k < 3; k++) {
-                for (var j = 0; j < words[k].length; j++) {
-                    edit[k] = edit[k].concat(false)
-                }
-            }
-        } else {
-            editWords=this.state.editWords;
-            editOffensive= this.state.editOffensive;
-            for (let index = 0; index < 3; index++) {       //updating non edit data
-                edit[index].splice(words[index].length)
-                editWords[index].splice(words[index].length)
-                editOffensive[index].splice(words[index].length)
-                if(words[index].length>edit[index].length){
-                    for(let ex=edit[index].length; ex<words[index].length; ex++){
-                        edit[index] = edit[index].concat(false)
-                        editWords[index]=editWords[index].concat(words[index][ex])
-                        editOffensive[index]=editOffensive[index].concat(offClassification[index][ex])
-                    }
-                }
-                for (let inx = 0; inx < edit[index].length; inx++) {
-                    if (!edit[index][inx]) {
-                        editWords= editWords.map((catWords, ix) => ix !== index ? catWords :  //finding the category
-                            catWords.map((word, indx) => indx !== inx ? word : words[index][inx]))
-                        editOffensive=editOffensive.map((catOffensive, ix) => ix !== index ? catOffensive :
-                            catOffensive.map((offensive, indx) => indx !== inx ? offensive : offClassification[index][inx]))
-                    }
-                }
-            }
-        }
-        this.setState({ words: words, offClassification: offClassification, wordCount: wordCount, id: id,
-        editOffensive: editOffensive, editWords: editWords })
-        console.log(words, offClassification, edit)
     }
 
     onSubmit = event => {
         event.preventDefault();
-        axios.post(API.Add_Training, JSON.stringify({        //add training data
-            "text": this.state.word,
-            "offensive": this.state.Offensive,
-            "category": this.state.category[this.state.index]
-        }),
+        console.log('submit')
+        axios.post(API.Save_TrainingData, JSON.stringify([{        //add training data API
+            "text": this.state.text,
+            "category": this.state.category[this.state.index],
+            "offensive": this.state.Offensive
+        }]),
             { headers: { "Content-Type": "application/json" } })
             .then(res => (res.data))
             .then((data) => {
-                if (!data.status == 200) {
+                if (data.message !== 'success') {
                     alert('error adding data')
                 }
             })
-        // this.state.wordCount[this.state.index] = this.state.wordCount[this.state.index] + 1
-        // this.state.words[this.state.index] = this.state.words[this.state.index].concat(this.state.word)
-        // this.state.offClassification[this.state.index] = this.state.offClassification[this.state.index].concat(this.state.Offensive)
-        edit[this.state.index] = edit[this.state.index].concat(false);
-        this.setState({
-            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
-                catWords.concat(this.state.word))
-        })
-        this.setState({
-            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
-                catOffensive.concat(this.state.Offensive))
-        })
-        // this.state.editWords[this.state.index] = this.state.editWords[this.state.index].concat(this.state.word)
-        // this.state.editOffensive[this.state.index] = this.state.editOffensive[this.state.index].concat(this.state.Offensive)
-        // this.forceUpdate();
-            this.setState({ reload: 1 })
-        this.getData(1)
-        console.log(this.state.wordCount, this.state.words, this.state.offClassification);
-        this.setState({ word: '', Offensive: '' })          //resetting handle change values
-        this.getData(1)
+        axios.post(API.Add_Training, JSON.stringify({        //add training data mock API
+            "text": this.state.text,
+            "offensive": this.state.Offensive,
+            "category": this.state.category[this.state.index]
+        }),
+            {
+                headers: { "Content-Type": "application/json" }
+            })
+        axios.post(API.Reload_TrainingData, JSON.stringify({//reload training data API
+            "custom_profanity": true,
+            "model": false
+        }),
+            {
+                headers: { "Content-Type": "application/json" }
+            })
+        this.setState({ text: '', Offensive: '' })          //resetting handle change values
 
     }
 
     categorySelect = (index) => {                           //switching between categories
-        console.log(this.state.category[index], this.state.offClassification, this.state.editOffensive);
         for (var j = 0; j < 3; j++) {                       //changing the background color of selected category
             if (j === index) {
                 b[j] = '#E0E0E0';
@@ -244,8 +189,8 @@ class TrainingData extends Component {
         this.setState({
             index: index
         }, () => {
-            for (var i = 0; i < edit[index].length; i++) {  //setting the 'edit' hide and 'done' display a/c to the category
-                if (!edit[index][i]) {                      //'edit' button not selected
+            for (var i = 0; i < this.state.edData[index].length; i++) {  //setting the 'edit' hide and 'done' display a/c to the category
+                if (!this.state.edData[index][i].edit) {     //'edit' button not selected
                     this.hide(i)
                 } else {                                    //'done' and cancel display
                     this.display(i)
@@ -256,11 +201,10 @@ class TrainingData extends Component {
 
     handleSelect = (event) => {                             //offensive range selecton - add new data
         this.setState({ Offensive: event.target.value })
-        console.log(event.target.value)
     }
 
     onHandleChange = (event) => {                           //handle text - add new data
-        this.setState({ word: event.target.value })         //input text value
+        this.setState({ text: event.target.value })         //input text value
     }
 
     display = (i) => {                                      //display the 'edit' on mouse over and display 'done' on select the edit
@@ -268,50 +212,49 @@ class TrainingData extends Component {
     }
 
     hide = (i) => {                                         //hide 'edit' button on mouse out
-        if (!edit[this.state.index][i]) {
+        if (!this.state.edData[this.state.index][i].edit) {
             document.getElementById(this.state.index + " edit " + i).style.display = 'none';
         }
     }
 
     edit = (i) => {
-        if (edit[this.state.index][i]) {                    //cheching whether 'done' button or not
-
-            //     axios.put(API.Add_Training,{ params: {id:this.state.id[this.state.index][i]}},
-            //         JSON.stringify({ "text": this.state.editWords[this.state.index][i],
-            //     "offensive": this.state.editOffensive[this.state.index][i],
-            //     "category": this.state.category[this.state.index]}) , 
-            //             { headers: {  "Content-Type": "application/json"  }})
-            //     .then(res => (res.data))
-            //     .then((data) => {
-            //         if(!data.status===200){
-            //         alert('error adding data')
-            //         }
-            // })
-            edit[this.state.index][i] = false;               //'edit' selection false
+        if (this.state.edData[this.state.index][i].edit) {               //cheching whether 'done' button or not 
+            // axios.post(API.Save_TrainingData, JSON.stringify([{     //edit training data
+            //     "text": this.state.edData[this.state.index][i].text,
+            //     "category": this.state.category[this.state.index]}),
+            //     "offensive": this.state.edData[this.state.index][i].offensive
+            // }]),
+            //     { headers: { "Content-Type": "application/json" } })
+            // axios.post(API.Reload_TrainingData, JSON.stringify({    //reload training data
+            //     "custom_profanity": true,
+            //     "model": false
+            // }),
+            //     {
+            //         headers: { "Content-Type": "application/json" }
+            //     })
             this.setState({
-                words: this.state.words.map((catWords, ix) => ix !== this.state.index ? catWords :   //finding the category
-                    catWords.map((word, indx) => indx !== i ? word : this.state.editWords[this.state.index][i]))
-            })//updating the edit
-            this.setState({
-                offClassification: this.state.offClassification.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
-                    catOffensive.map((offensive, indx) => indx !== i ? offensive : this.state.editOffensive[this.state.index][i]))
+                trData: this.state.trData.map((catData, ix) => ix !== this.state.index ? catData :      //finding the category
+                    catData.map((data, indx) => indx !== i ? data : {
+                        ...data, text: this.state.edData[this.state.index][i].text,
+                        offensive: this.state.edData[this.state.index][i].offensive
+                    })),
+                edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :      //'edit' selection false
+                    catData.map((data, indx) => indx !== i ? data : { ...data, edit: false })),
             })
-            // this.state.words[this.state.index][i] = this.state.editWords[this.state.index][i]
-            // this.state.offClassification[this.state.index][i] = this.state.editOffensive[this.state.index][i]
-            // this.forceUpdate();
-            this.getData(1)
-            this.getData(1)
-            document.getElementById(this.state.index + " edit " + i).style.display = 'none';    //hiding the 'edit' button
-        } else {                                            //'edit' selection
-            console.log('edit ' + this.state.words[this.state.index][i]);
-            edit[this.state.index][i] = true;                //'edit' selection true
-            this.setState({ reload: 1 })
-            document.getElementById(this.state.index + " edit " + i).style.display = 'inline';  //displaying the 'done' and cancel
+            document.getElementById(this.state.index + " edit " + i).style.display = 'none';            //hiding the 'edit' button
+        }
+        else {                                                                                          //'edit' selection
+            console.log('edit ' + this.state.trData[this.state.index][i].text);
+            this.setState({
+                edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :      //'edit' selection true
+                    catData.map((data, indx) => indx !== i ? data : { ...data, edit: true })),
+            })
+            document.getElementById(this.state.index + " edit " + i).style.display = 'inline';          //displaying the 'done' and cancel
         }
     }
 
     noEditing = (i) => {
-        if (edit[this.state.index][i]) {                    //return false for edit selected data
+        if (this.state.edData[this.state.index][i].edit) {  //return false for edit selected data
             return false;
         }
         return true;
@@ -319,33 +262,28 @@ class TrainingData extends Component {
 
     onEditText = (i, event) => {                            //handle change - edit data
         this.setState({
-            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
-                catWords.map((word, indx) => indx !== i ? word : event.target.value))
+            edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :
+                catData.map((data, indx) => indx !== i ? data : { ...data, text: event.target.value })),
         })
     }
 
     editSelect = (i, event) => {                            //offensive range selection - edit data
         this.setState({
-            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
-                catOffensive.map((offensive, indx) => indx !== i ? offensive : event.target.value))
+            edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :
+                catData.map((data, indx) => indx !== i ? data : { ...data, offensive: event.target.value })),
         })
     }
 
     cancel = (i) => {                                       // cancel editing
-        console.log('Cancel edit ' + this.state.words[this.state.index][i]);
-        edit[this.state.index][i] = false;                  // 'edit' selection false
-        this.setState({
-            editWords: this.state.editWords.map((catWords, ix) => ix !== this.state.index ? catWords :  //finding the category
-                catWords.map((word, indx) => indx !== i ? word : this.state.words[this.state.index][i]))
+        console.log('Cancel edit ' + this.state.trData[this.state.index][i].text);
+        this.setState({                                     //edit false, edit data= training data
+            edData: this.state.edData.map((catData, ix) => ix !== this.state.index ? catData :
+                catData.map((data, indx) => indx !== i ? data : {
+                    ...data, edit: false, text: this.state.trData[this.state.index][i].text,
+                    offensive: this.state.trData[this.state.index][i].offensive
+                })),
         })
-        this.setState({
-            editOffensive: this.state.editOffensive.map((catOffensive, ix) => ix !== this.state.index ? catOffensive :
-                catOffensive.map((offensive, indx) => indx !== i ? offensive : this.state.offClassification[this.state.index][i]))
-        })
-        // this.state.editWords[this.state.index][i] = this.state.words[this.state.index][i]
-        // this.state.editOffensive[this.state.index][i] = this.state.offClassification[this.state.index][i]
-        // this.forceUpdate();                                 //removing changes from the data
-        document.getElementById(this.state.index + " edit " + i).style.display = 'none';    //hide 'edit' button
+        document.getElementById(this.state.index + " edit " + i).style.display = 'none';        //hide 'edit' button
     }
 
 
@@ -358,15 +296,15 @@ class TrainingData extends Component {
                     <h4 style={{ float: 'left', marginLeft: '4%', marginTop: '0.25%' }}>Categories</h4>
                     <div style={{ width: '17%', float: 'left', marginTop: '3%', marginLeft: '-6.5%' }}>
                         <List className={classes.root}>
-                            {this.state.category.map((listData, i) => (                     //mapping categories
+                            {this.state.category.map((listData, i) => (                         //mapping categories
                                 <ListItem onClick={() => this.categorySelect(i)}
                                     style={{ height: 45, backgroundColor: b[i] }} key={i}>
-                                    <ListItemText key={i} primary={listData} />              {/*listing categories*/}
+                                    <ListItemText key={i} primary={listData} />                 {/*listing categories*/}
                                     <div key={i + 100} style={{
                                         float: 'right', color: '#0074B6',
                                         fontSize: '18px', flexDirection: 'column'
                                     }}>
-                                        {this.state.wordCount[i]}                           {/*displaying category word count*/}
+                                        {this.state.textCount[i]}                               {/*displaying category text count */}
                                     </div>
                                 </ListItem>
                             ))}
@@ -374,18 +312,18 @@ class TrainingData extends Component {
                     </div>
                 </div>
 
-                <div style={{ marginLeft: '24%' }}>                                           {/*data section*/}
+                <div style={{ marginLeft: '24%' }}>                                             {/*data section*/}
                     <h4 style={{ marginTop: '3%', marginBottom: '1%' }}>Training Data</h4>
                     <div style={{ marginBottom: '2%' }}>
-                        <form onSubmit={this.onSubmit}>                                     {/*add new data form*/}
-                            <TextField style={{ width: '49.8%', backgroundColor: 'white' }}   //input text
+                        <form onSubmit={this.onSubmit}>                                         {/*add new data form*/}
+                            <TextField style={{ width: '49.8%', backgroundColor: 'white' }}     //input text
                                 className={classes.textField} variant='standard'
                                 label=" + Add text to classify"
-                                required InputLabelProps={{ required: false }}               //required field, hide '*'
-                                value={this.state.word} onChange={this.onHandleChange} />
-                            <FormControl className={classes.formControl} className={classes.textField}
+                                required InputLabelProps={{ required: false }}                  //required field, hide '*'
+                                value={this.state.text} onChange={this.onHandleChange} />
+                            <FormControl className={classes.textField}
                                 style={{ backgroundColor: 'white', width: '19.8%', marginLeft: '1%', marginTop: '0%' }}
-                                variant='standard' color='primary'>                         {/*offenive range selection*/}
+                                variant='standard' color='primary'>                             {/*offenive range selection*/}
                                 <InputLabel style={{ color: '#0074B6' }}>Select Offensive Range</InputLabel>
                                 <Select value={this.state.Offensive} onChange={this.handleSelect} required>
                                     <MenuItem value={'Lightly Offensive'}>Lightly Offensive</MenuItem>
@@ -393,7 +331,7 @@ class TrainingData extends Component {
                                     <MenuItem value={'Extremely Offensive'}>Extremely Offensive</MenuItem>
                                 </Select>
                             </FormControl>
-                            <Button type='submit' variant="contained" color='primary'        //Submit button
+                            <Button type='submit' variant="contained" color='primary'           //Submit button
                                 style={{
                                     border: 'none', width: '13%', height: 50,
                                     textTransform: 'none', marginLeft: '1.3%'
@@ -403,13 +341,13 @@ class TrainingData extends Component {
                         </form>
                     </div>
 
-                    <div style={{ marginTop: '-1.5%' }}>                                      {/*edit data section*/}
-                        {this.state.words[this.state.index].map((word, i) => (              //mapping training data in the selected category
+                    <div style={{ marginTop: '-1.5%' }}>                                        {/*edit data section*/}
+                        {this.state.edData[this.state.index].map((data, i) => (                 //mapping training data in the selected category
                             <div key={i} onMouseOver={() => this.display(i)}
-                                onMouseOut={() => this.hide(i)}>                            {/*hiding and displaying of 'edit' button*/}
-                                <TextField variant="outlined" disabled={this.noEditing(i)}  //disabling non editing text field
+                                onMouseOut={() => this.hide(i)}>                                {/*hiding and displaying of 'edit' button*/}
+                                <TextField variant="outlined" disabled={this.noEditing(i)}      //disabling non editing text field
                                     onChange={(e) => this.onEditText(i, e)}
-                                    value={this.state.editWords[this.state.index][i]}
+                                    value={this.state.edData[this.state.index][i].text}
                                     required InputLabelProps={{ required: false }}
                                     style={{ width: '50%', marginBottom: '0.5%', marginTop: '0%', backgroundColor: 'white' }} />
                                 <FormControl className={classes.formControl} variant='outlined'
@@ -418,7 +356,7 @@ class TrainingData extends Component {
                                         backgroundColor: 'white', marginTop: '-0%'
                                     }}>           {/*offensive range selection*/}
                                     <Select required disabled={this.noEditing(i)} onChange={(e) => this.editSelect(i, e)}
-                                        value={this.state.editOffensive[this.state.index][i]}>
+                                        value={this.state.edData[this.state.index][i].offensive}>
                                         <MenuItem value={'Lightly Offensive'}>Lightly Offensive</MenuItem>
                                         <MenuItem value={'Offensive'}>Offensive</MenuItem>
                                         <MenuItem value={'Extremely Offensive'}>Extremely Offensive</MenuItem>
@@ -434,7 +372,7 @@ class TrainingData extends Component {
                                         {this.noEditing(i) ? 'Edit' : 'Done'}                   {/*display 'edit' for non edit, else 'done'*/}
                                     </Button>
                                     {this.noEditing(i) ? null : <IconButton size='small'
-                                        onClick={() => this.cancel(i)} >                    {/*display cancel with 'done'*/}
+                                        onClick={() => this.cancel(i)} >                        {/*display cancel with 'done'*/}
                                         <CancelIcon color='primary' fontSize='large'
                                             style={{ marginLeft: '1%', marginBottom: '-1%', marginTop: '0%' }} />
                                     </IconButton>
