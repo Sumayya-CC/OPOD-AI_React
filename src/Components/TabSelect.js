@@ -22,9 +22,7 @@ function TabPanel(props) {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}>
       {value === index && (
-        // <Box p={3} >
-          <div>{children}</div>
-        // </Box>
+        <div>{children}</div>
       )}
     </div>
   );
@@ -77,7 +75,7 @@ const AntTab = withStyles((theme) => ({
     '&$selected': {
       color: '#303055',
       fontWeight: theme.typography.fontWeightMedium,
-      
+
     },
     '&:focus': {
       color: '#303055',
@@ -92,8 +90,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   padding: {
-    padding:0
-    // padding: theme.spacing(3),
+    padding: 0
   },
 }));
 
@@ -114,32 +111,31 @@ export default function TabSelect(props) {
 
   return (
     <div className={classes.root}>
-      <div style={{backgroundColor:'white'}}>
-        <img alt='iGOT' src={logo} style={{width:'6%', display:'inline-flex', marginLeft:'5%', marginTop:'1%'}}/>
-        <AntTabs value={value} onChange={handleChange} aria-label="ant example" style={{marginLeft:'12%', marginTop:'-3%'}}>
-          <AntTab label="Profanity Check" {...a11yProps(0)}/>
-          <AntTab label="Training Data" {...a11yProps(1)}/>
+      <div style={{ backgroundColor: 'white' }}>
+        <img alt='iGOT' src={logo} style={{ width: '6%', display: 'inline-flex', marginLeft: '5%', marginTop: '1%' }} />
+        <AntTabs value={value} onChange={handleChange} aria-label="ant example" style={{ marginLeft: '12%', marginTop: '-3%' }}>
+          <AntTab label="Profanity Check" {...a11yProps(0)} />    {/*first tab*/}
+          <AntTab label="Training Data" {...a11yProps(1)} />      {/*second tab*/}
         </AntTabs>
       </div>
 
       <div>
-        <Typography className={classes.padding}/>
-        <SwipeableViews  axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}>
+        <Typography className={classes.padding} />
+        <SwipeableViews axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={value} onChangeIndex={handleChangeIndex}>
 
-        <TabPanel  
-        // value={value} index={0} dir={theme.direction} 
-        hidden={value === 1}>
-          <Report/> 
-        </TabPanel>
+          <TabPanel
+            // value={value} index={0} dir={theme.direction}> 
+            hidden={value === 1}>        {/*displaying 1st tab by hiding 2nd tab*/}
+            <Report />                   {/*Check profanity and display result*/}
+          </TabPanel>
 
-        <TabPanel  
-        // value={value} index={1} dir={theme.direction} 
-        hidden={value === 0}>
-          <TrainingData/>
-        </TabPanel>
-        
+          <TabPanel
+            // value={value} index={1} dir={theme.direction}> 
+            hidden={value === 0}>        {/*displaying 2nd tab by hiding 1st tab*/}
+            <TrainingData />             {/*adda nd edit training data set (incomplete)*/}
+          </TabPanel>
+
         </SwipeableViews>
       </div>
     </div>
