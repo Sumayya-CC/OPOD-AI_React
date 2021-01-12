@@ -74,7 +74,7 @@ export default function ImageResultView(props) {
                     <CardActionArea>
                       <CardMedia
                         className={classes.media}
-                        image={props.imgValue.result}
+                        image={props.imgValue.result || props.imgValue}
                         title="result preview"
                       />
                       <CardContent className="custom-card-content">

@@ -7,6 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ImageUploadService from "../../../services/imageProfanity.service";
+import ImageURLUploadService from "../../../services/imageURLProfanity.service";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,7 @@ export default function ImageProfanityContainer(props) {
   const [value, setValue] = useState("");
   const [data, setData] = useState("");
   const [imgValue, setImgValue] = useState("");
+  const [imgLink, setImgLink] = useState("");
 
   function getFileData(value) {
     setValue(value);
@@ -38,9 +40,18 @@ export default function ImageProfanityContainer(props) {
     setImgValue(value);
   }
 
+  function getImgLink(value) {
+    setImgLink(value);
+    setImgValue(JSON.parse(value).image_url);
+  }
+
   useEffect(() => {
     uploadFileService(value);
   }, [value]);
+
+  useEffect(() => {
+    uploadURLService(imgLink);
+  }, [imgLink]);
 
   function uploadFileService(value) {
     if (value && value !== undefined) {
@@ -52,10 +63,20 @@ export default function ImageProfanityContainer(props) {
     }
   }
 
+  function uploadURLService(value) {
+    if (value && value !== undefined) {
+      ImageURLUploadService.urlUpload(value).then((res) => {
+        if (res.data.code === 200) {
+          setData(res.data);
+        }
+      });
+    }
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Typography component="div" >
+      <Typography component="div">
         <Box fontWeight="fontWeightBold" mt={5} ml={5} className="heading-1">
           Image Profanity
         </Box>
@@ -66,6 +87,7 @@ export default function ImageProfanityContainer(props) {
           <ImageUploadView
             uploadFile={getFileData}
             sendImgValue={getImageValue}
+            sendImgLink={getImgLink}
           />
         </Grid>
         {/* Left side */}

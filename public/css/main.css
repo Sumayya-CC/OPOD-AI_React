@@ -213,6 +213,11 @@ html[data-theme="dark"] {
   width: fit-content !important;
 }
 
+fieldset {
+  font-family: "Lato-Regular" !important;
+  font-size: 1em !important;
+}
+
 .body-text-1-caution {
   color: #FECC4D !important;
   font-family: "Lato-Bold" !important;

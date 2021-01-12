@@ -1,7 +1,7 @@
 import http from "../helpers/mapPostHeader";
 import { APIS } from "../constants/apiConstants";
 
-// Image upload service (Images other than maps)
+// Map upload service
 class MapUploadService {
   mapUpload(file) {
     let formData = new FormData();

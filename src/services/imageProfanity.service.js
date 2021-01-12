@@ -11,12 +11,8 @@ class ImageUploadService {
     return http.post(APIS.IMAGE_UPLOAD, formData);
   }
 
-  mapUpload(file) {
-    let formData = new FormData();
-
-    formData.append("image", file);
-
-    return http.post(APIS.MAP_UPLOAD, formData);
+  urlUpload(data) {
+    return http.post(APIS.IMAGE_URL_UPLOAD, data);
   }
 }
 
