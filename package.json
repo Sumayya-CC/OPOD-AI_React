@@ -10,6 +10,9 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.20.0",
+    "clsx": "^1.1.1",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.5",
     "jsx-to-string": "^1.4.0",
     "material-ui-dropzone": "^3.5.0",
     "prop-types": "^15.7.2",
@@ -24,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:staging": "env-cmd -f ./.env.staging npm run build",
+    "build:production": "env-cmd -f ./.env.production npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"

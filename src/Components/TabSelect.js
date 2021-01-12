@@ -1,15 +1,15 @@
-import React from 'react';
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import SwipeableViews from 'react-swipeable-views';
-import PropTypes from 'prop-types';
-import './Style.css';
-import Report from './Report'
-import logo from './tarentologo.png';
-import TrainingData from './TrainingData';
-
+import React from "react";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
+import "./Style.css";
+import Report from "./Report";
+import logo from "./tarentologo.png";
+import TrainingData from "./TrainingData";
+import ImageProfanityContainer from "./imageProfanity/container/ImageProfanityContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -20,10 +20,9 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
-      {...other}>
-      {value === index && (
-        <div>{children}</div>
-      )}
+      {...other}
+    >
+      {value === index && <div>{children}</div>}
     </div>
   );
 }
@@ -37,64 +36,60 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 
 const AntTabs = withStyles({
   root: {
-    borderBottom: '1px solid #e8e8e8',
+    borderBottom: "1px solid #e8e8e8",
   },
   indicator: {
-    backgroundColor: '#303055',
+    backgroundColor: "#303055",
   },
 })(Tabs);
 
 const AntTab = withStyles((theme) => ({
   root: {
-    textTransform: 'none',
+    textTransform: "none",
     minWidth: 72,
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
     fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-      color: '#303055',
+    ].join(","),
+    "&:hover": {
+      color: "#303055",
       opacity: 1,
     },
-    '&$selected': {
-      color: '#303055',
+    "&$selected": {
+      color: "#303055",
       fontWeight: theme.typography.fontWeightMedium,
-
     },
-    '&:focus': {
-      color: '#303055',
+    "&:focus": {
+      color: "#303055",
     },
   },
   selected: {},
 }))((props) => <Tab disableRipple {...props} />);
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   padding: {
-    padding: 0
+    padding: 0,
   },
 }));
-
-
 
 export default function TabSelect(props) {
   const classes = useStyles();
@@ -108,34 +103,74 @@ export default function TabSelect(props) {
     setValue(index);
   };
 
-
   return (
     <div className={classes.root}>
-      <div style={{ backgroundColor: 'white' }}>
-        <img alt='iGOT' src={logo} style={{ width: '6%', display: 'inline-flex', marginLeft: '5%', marginTop: '1%' }} />
-        <AntTabs value={value} onChange={handleChange} aria-label="ant example" style={{ marginLeft: '12%', marginTop: '-3%' }}>
-          <AntTab label="Profanity Check" {...a11yProps(0)} />    {/*first tab*/}
-          <AntTab label="Training Data" {...a11yProps(1)} />      {/*second tab*/}
+      <div style={{ backgroundColor: "white" }}>
+        <img
+          alt="iGOT"
+          src={logo}
+          style={{
+            width: "6%",
+            display: "inline-flex",
+            marginLeft: "5%",
+            marginTop: "1%",
+          }}
+        />
+        <AntTabs
+          value={value}
+          onChange={handleChange}
+          aria-label="ant example"
+          style={{ marginLeft: "12%", marginTop: "-3%" }}
+        >
+          <AntTab label="Profanity Check" {...a11yProps(0)} /> {/*first tab*/}
+          <AntTab label="Training Data" {...a11yProps(1)} /> {/*second tab*/}
+          {/*third tab*/}
+          <AntTab label="Image Profanity" {...a11yProps(2)} />
+          {/*fourth tab*/}
+          <AntTab label="India Map Detector" {...a11yProps(3)} />
         </AntTabs>
       </div>
 
       <div>
         <Typography className={classes.padding} />
-        <SwipeableViews axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={value} onChangeIndex={handleChangeIndex}>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+        >
+          {value === 0 && (
+            <TabPanel
+              // value={value} index={0} dir={theme.direction}>
+              hidden={value === 1}
+            >
+              {" "}
+              {/*displaying 1st tab by hiding 2nd tab*/}
+              <Report /> {/*Check profanity and display result*/}
+            </TabPanel>
+          )}
 
-          <TabPanel
-            // value={value} index={0} dir={theme.direction}> 
-            hidden={value === 1}>        {/*displaying 1st tab by hiding 2nd tab*/}
-            <Report />                   {/*Check profanity and display result*/}
-          </TabPanel>
+          {value === 1 && (
+            <TabPanel
+              // value={value} index={1} dir={theme.direction}>
+              hidden={value === 0}
+            >
+              {" "}
+              {/*displaying 2nd tab by hiding 1st tab*/}
+              <TrainingData /> {/*adda nd edit training data set (incomplete)*/}
+            </TabPanel>
+          )}
 
-          <TabPanel
-            // value={value} index={1} dir={theme.direction}> 
-            hidden={value === 0}>        {/*displaying 2nd tab by hiding 1st tab*/}
-            <TrainingData />             {/*adda nd edit training data set (incomplete)*/}
-          </TabPanel>
-
+          {value === 2 && (
+            <TabPanel
+              // value={value} index={1} dir={theme.direction}>
+              hidden={value === 0 && value === 1}
+            >
+              {" "}
+              {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
+              <ImageProfanityContainer />{" "}
+              {/*adda nd edit training data set (incomplete)*/}
+            </TabPanel>
+          )}
         </SwipeableViews>
       </div>
     </div>
