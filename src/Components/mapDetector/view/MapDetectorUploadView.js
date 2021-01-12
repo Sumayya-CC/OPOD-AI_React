@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   paper: {
-    background: 'transparent',
+    background: "transparent",
     borderRadius: 0,
     padding: theme.spacing(2),
     color: theme.palette.text.secondary,
@@ -24,47 +23,66 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  media: {
+    width: "auto",
+    height: "30vh",
+  },
+  customContainer: {
+    marginLeft: "0.75em",
+  },
+  customCard: {
+    backgroundColor: "#ffff",
+    boxShadow: "none",
+    borderRadius: 0,
+    marginBottom: "2em",
+    width: "auto",
+    height: "auto",
+    "&:hover": { backgroundColor: "white" },
+  },
 }));
 
 export default function MapDetectorUploadView(props) {
   const classes = useStyles();
 
-  const [selectedFile, setSelectedFile] = useState("");
-  const [currentFile, setCurrentFile] = useState("");
-  const [imgURL, setImgURL] = useState("");
+  const [selectedMapFile, setSelectedMapFile] = useState("");
+  const [currentMapFile, setCurrentMapFile] = useState("");
+  const [imgMapURL, setImgMapURL] = useState("");
 
-  function selectUploadFile(event) {
-    setSelectedFile(event.target.files);
+  function selectMapUploadFile(event) {
+    setSelectedMapFile(event.target.files);
     let reader = new FileReader();
 
     reader.onload = function () {
-      var output = document.getElementById("contained-button-file");
+      var output = document.getElementById("contained-button-file-2");
       output.src = reader.result;
     };
     reader.readAsDataURL(event.target.files[0]);
-
-    setImgURL(reader);
+    setTimeout(() => {
+      setImgMapURL(reader);
+    }, 250);
   }
 
-  function currentFileExtract(value) {
-    setCurrentFile(value[0]);
+  function currentFileMapExtract(value) {
+    setCurrentMapFile(value[0]);
   }
 
   useEffect(() => {
-    currentFileExtract(selectedFile);
-  }, [selectedFile]);
+    currentFileMapExtract(selectedMapFile);
+  }, [selectedMapFile]);
 
   useEffect(() => {
-    if (props && currentFile) {
-      props.uploadFile(currentFile);
+    if (props && currentMapFile) {
+      props.uploadFile(currentMapFile);
     }
-  }, [currentFile, props]);
+  }, [currentMapFile, props]);
 
   useEffect(() => {
-    if (props && imgURL) {
-      props.sendImgValue(imgURL);
+    if (props && imgMapURL) {
+      setTimeout(() => {
+        props.sendImgValue(imgMapURL);
+      }, 500);
     }
-  }, [imgURL, props]);
+  }, [imgMapURL, props]);
 
   return (
     <div className={classes.root}>
@@ -73,24 +91,28 @@ export default function MapDetectorUploadView(props) {
       <Grid container spacing={0}>
         <Grid item xs={12}>
           <Paper className={classes.paper} elevation={0}>
-            <Box fontWeight="fontWeightRegular" mt={3} ml={4} mb={5}>
+            <Box
+              fontWeight="fontWeightRegular"
+              mt={3}
+              ml={3}
+              mb={5}
+              className="sub-heading-1"
+            >
               Upload Map
             </Box>
             <Container maxWidth="lg">
               <input
                 accept="image/*"
                 className={classes.input}
-                id="contained-button-file"
+                id="contained-button-file-2"
                 type="file"
-                onChange={selectUploadFile}
+                onChange={selectMapUploadFile}
               />
-              <label htmlFor="contained-button-file">
+              <label htmlFor="contained-button-file-2">
                 <Button
                   component="span"
                   variant="contained"
-                  color="default"
-                  className={classes.button}
-                  startIcon={<CloudUploadIcon />}
+                  className="button-style-1 button-text-1"
                 >
                   Upload
                 </Button>
@@ -98,17 +120,23 @@ export default function MapDetectorUploadView(props) {
             </Container>
           </Paper>
         </Grid>
-        {imgURL && imgURL.result !== null && (
+        {imgMapURL && imgMapURL.result !== null && (
           <Grid item xs={12}>
             <Paper className={classes.paper} elevation={0}>
-              <Box fontWeight="fontWeightRegular" mt={3} ml={4} mb={5}>
-                Preview
+              <Box
+                fontWeight="fontWeightRegular"
+                mt={3}
+                ml={3}
+                mb={5}
+                className="sub-heading-1"
+              >
+                Map Preview
               </Box>
               <Container maxWidth="lg">
                 <img
                   className="uploaded-preview"
-                  src={imgURL.result}
-                  alt="uploaded data"
+                  src={imgMapURL.result}
+                  alt="uploaded map data"
                 />
               </Container>
             </Paper>

@@ -145,7 +145,6 @@ html[data-theme="dark"] {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 
@@ -161,16 +160,15 @@ html[data-theme="dark"] {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 
 /* Image profanity styles starts here */
 
 .heading-1 {
-  color: var(--active-87);
-  font-family: "Lato-Bold";
-  font-size: 1.5em;
+  color: var(--active-87) !important;
+  font-family: "Lato-Bold" !important;
+  font-size: 1.5em !important;
 }
 
 .sub-heading-1 {
@@ -197,6 +195,44 @@ html[data-theme="dark"] {
 .body-text-1 {
   color: #858689 !important;
   font-family: "Lato-Regular" !important;
+  font-size: 1.25em !important;
+  padding-top: 0.85em;
+  padding-bottom: 0.5em;
+}
+
+.body-text-tag {
+  margin-top: 0.35em !important;
+  background-color: #FECC4D !important;
+  color: #ffffff !important;
+  font-family: "Lato-Regular" !important;
+  font-size: 1.25em !important;
+  padding-right: 0.85em;
+  padding-left: 0.85em;
+  padding-top: 0.35em;
+  padding-bottom: 0.35em;
+  width: fit-content !important;
+}
+
+.body-text-1-caution {
+  color: #FECC4D !important;
+  font-family: "Lato-Bold" !important;
+  font-size: 1.25em !important;
+  padding-top: 0.85em;
+  padding-bottom: 0.5em;
+  
+}
+
+.body-text-1-not-safe {
+  color: #F30C0C !important;
+  font-family: "Lato-Bold" !important;
+  font-size: 1.25em !important;
+  padding-top: 0.85em;
+  padding-bottom: 0.5em;
+}
+
+.body-text-1-safe {
+  color: #4AB98A !important;
+  font-family: "Lato-Bold" !important;
   font-size: 1.25em !important;
   padding-top: 0.85em;
   padding-bottom: 0.5em;

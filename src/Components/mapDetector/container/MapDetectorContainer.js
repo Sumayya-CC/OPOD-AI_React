@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import ImageUploadService from "../../../services/imageProfanity.service";
+import MapUploadService from "../../../services/mapProfanity.service";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,27 +26,32 @@ const useStyles = makeStyles((theme) => ({
 export default function MapDetectorContainer(props) {
   const classes = useStyles();
 
-  const [value, setValue] = useState("");
-  const [data, setData] = useState("");
-  const [imgValue, setImgValue] = useState("");
+  const [mapValue, setMapValue] = useState("");
+  const [mapData, setMapData] = useState("");
+  const [imgMapValue, setImgMapValue] = useState("");
 
-  function getFileData(value) {
-    setValue(value);
+  function getMapFileData(value) {
+    setTimeout(() => {
+      setMapValue(value);
+    }, 550);
   }
 
-  function getImageValue(value) {
-    setImgValue(value);
+  function getMapImageValue(value) {
+    setTimeout(() => {
+      setImgMapValue(value);
+    }, 600);
   }
 
   useEffect(() => {
-    uploadFileService(value);
-  }, [value]);
+    uploadMapFileService(mapValue);
+  }, [mapValue]);
 
-  function uploadFileService(value) {
+  function uploadMapFileService(value) {
+    setMapData("");
     if (value && value !== undefined) {
-      ImageUploadService.mapUpload(value).then((res) => {
-        if (res.data.code === 200) {
-          setData(res.data);
+      MapUploadService.mapUpload(value).then((res) => {
+        if (res.data.Code === 200) {
+          setMapData(res.data);
         }
       });
     }
@@ -56,7 +61,7 @@ export default function MapDetectorContainer(props) {
     <div className={classes.root}>
       <CssBaseline />
       <Typography component="div">
-        <Box fontWeight="fontWeightBold" mt={5} ml={6}>
+        <Box fontWeight="fontWeightBold" mt={5} ml={5} className="heading-1">
           India Map Detector
         </Box>
       </Typography>
@@ -64,13 +69,15 @@ export default function MapDetectorContainer(props) {
         {/* Right side */}
         <Grid item xs={12} md={6} lg={6}>
           <MapDetectorUploadView
-            uploadFile={getFileData}
-            sendImgValue={getImageValue}
+            uploadFile={getMapFileData}
+            sendImgValue={getMapImageValue}
           />
         </Grid>
         {/* Left side */}
         <Grid item xs={12} md={6} lg={6}>
-          <MapDetectorResultView data={data} imgValue={imgValue} />
+          {mapData && (
+            <MapDetectorResultView data={mapData} imgValue={imgMapValue} />
+          )}
         </Grid>
       </Grid>
     </div>

@@ -10,6 +10,7 @@ import Report from "./Report";
 import logo from "./tarentologo.png";
 import TrainingData from "./TrainingData";
 import ImageProfanityContainer from "./imageProfanity/container/ImageProfanityContainer";
+import MapDetectorContainer from "./mapDetector/container/MapDetectorContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -168,6 +169,18 @@ export default function TabSelect(props) {
               {" "}
               {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
               <ImageProfanityContainer />{" "}
+              {/*adda nd edit training data set (incomplete)*/}
+            </TabPanel>
+          )}
+
+{value === 3 && (
+            <TabPanel
+              // value={value} index={1} dir={theme.direction}>
+              hidden={value === 0 && value === 1 && value === 2}
+            >
+              {" "}
+              {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
+              <MapDetectorContainer />{" "}
               {/*adda nd edit training data set (incomplete)*/}
             </TabPanel>
           )}

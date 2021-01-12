@@ -12,7 +12,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import domtoimage from "dom-to-image";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +67,6 @@ export default function ImageResultView(props) {
             >
               Result
             </Box>
-
             <Container maxWidth="sm" className={classes.customContainer}>
               {props.imgValue && props.imgValue.result !== null && (
                 <React.Fragment>
@@ -80,37 +79,122 @@ export default function ImageResultView(props) {
                       />
                       <CardContent className="custom-card-content">
                         <Grid container spacing={0}>
-                          <Grid item xs={12} md={6} lg={6}>
+                          <Grid item xs={12} style={{ marginBottom: "2.5em" }}>
                             <Typography
                               variant="h5"
                               component="h2"
                               className="heading-1"
                             >
-                              Is safe to use ?
+                              Guidance
                             </Typography>
                             {props.data &&
                               props.data.is_safe === true &&
                               props.data.predictions.sfw < 0.75 && (
                                 <React.Fragment>
-                                  <div className="image-caution image-container-1"></div>
-                                  <Typography
-                                    variant="body2"
-                                    component="p"
-                                    className="body-text-1"
-                                  >
-                                    Use with caution
-                                  </Typography>
+                                  <Grid container spacing={0}>
+                                    <Grid item xs={12} md={6} lg={6}>
+                                      <Typography
+                                        variant="body2"
+                                        component="p"
+                                        className="body-text-1-caution"
+                                      >
+                                        Use with caution
+                                      </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} md={6} lg={6}>
+                                      <Grid container direction="row-reverse">
+                                        {props.data &&
+                                          props.data.predictions[
+                                            "nsfw-violence"
+                                          ] > 0.1 && (
+                                            <Grid
+                                              item
+                                              xs={12}
+                                              md={4}
+                                              lg={4}
+                                              style={{ marginRight: "1.325em" }}
+                                            >
+                                              <Typography
+                                                variant="body2"
+                                                component="p"
+                                                className="body-text-tag"
+                                              >
+                                                Violence
+                                              </Typography>
+                                            </Grid>
+                                          )}
+
+                                        {props.data &&
+                                          props.data.predictions["nsfw-nude"] >
+                                            0.5 && (
+                                            <Grid
+                                              item
+                                              xs={12}
+                                              md={4}
+                                              lg={4}
+                                              style={{ marginRight: "1.325em" }}
+                                            >
+                                              <Typography
+                                                variant="body2"
+                                                component="p"
+                                                className="body-text-tag"
+                                              >
+                                                Nudity
+                                              </Typography>
+                                            </Grid>
+                                          )}
+                                        {props.data &&
+                                          props.data.predictions[
+                                            "nsfw-risque"
+                                          ] > 0.5 && (
+                                            <Grid
+                                              item
+                                              xs={12}
+                                              md={4}
+                                              lg={4}
+                                              style={{ marginRight: "1.325em" }}
+                                            >
+                                              <Typography
+                                                variant="body2"
+                                                component="p"
+                                                className="body-text-tag"
+                                              >
+                                                Risque
+                                              </Typography>
+                                            </Grid>
+                                          )}
+                                        {props.data &&
+                                          props.data.predictions["nsfw-sex"] >
+                                            0.5 && (
+                                            <Grid
+                                              item
+                                              xs={12}
+                                              md={4}
+                                              lg={4}
+                                              style={{ marginRight: "1.325em" }}
+                                            >
+                                              <Typography
+                                                variant="body2"
+                                                component="p"
+                                                className="body-text-tag"
+                                              >
+                                                Nudity
+                                              </Typography>
+                                            </Grid>
+                                          )}
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
                                 </React.Fragment>
                               )}
                             {props.data &&
                               props.data.is_safe === true &&
                               props.data.predictions.sfw > 0.75 && (
                                 <React.Fragment>
-                                  <div className="image-safe image-container-1"></div>
                                   <Typography
                                     variant="body2"
                                     component="p"
-                                    className="body-text-1"
+                                    className="body-text-1-safe"
                                   >
                                     Safe to use
                                   </Typography>
@@ -118,66 +202,119 @@ export default function ImageResultView(props) {
                               )}
                             {props.data && props.data.is_safe === false && (
                               <React.Fragment>
-                                <div className="image-not-safe image-container-1"></div>
-                                <Typography
-                                  variant="body2"
-                                  component="p"
-                                  className="body-text-1"
-                                >
-                                  Not safe to use
-                                </Typography>
+                                <Grid container spacing={0}>
+                                  <Grid item xs={12} md={6} lg={6}>
+                                    <Typography
+                                      variant="body2"
+                                      component="p"
+                                      className="body-text-1-not-safe"
+                                    >
+                                      Not safe to use
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6} lg={6}>
+                                    <Grid container direction="row-reverse">
+                                      {props.data &&
+                                        props.data.predictions[
+                                          "nsfw-violence"
+                                        ] > 0.5 && (
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            md={4}
+                                            lg={4}
+                                            style={{ marginRight: "1.325em" }}
+                                          >
+                                            <Typography
+                                              variant="body2"
+                                              component="p"
+                                              className="body-text-tag"
+                                            >
+                                              Violence
+                                            </Typography>
+                                          </Grid>
+                                        )}
+                                      {props.data &&
+                                        props.data.predictions["nsfw-nude"] >
+                                          0.5 && (
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            md={4}
+                                            lg={4}
+                                            style={{ marginRight: "1.325em" }}
+                                          >
+                                            <Typography
+                                              variant="body2"
+                                              component="p"
+                                              className="body-text-tag"
+                                            >
+                                              Nudity
+                                            </Typography>
+                                          </Grid>
+                                        )}
+
+                                      {props.data &&
+                                        props.data.predictions["nsfw-risque"] >
+                                          0.5 && (
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            md={4}
+                                            lg={4}
+                                            style={{ marginRight: "1.325em" }}
+                                          >
+                                            <Typography
+                                              variant="body2"
+                                              component="p"
+                                              className="body-text-tag"
+                                            >
+                                              Risque
+                                            </Typography>
+                                          </Grid>
+                                        )}
+                                      {props.data &&
+                                        props.data.predictions["nsfw-sex"] >
+                                          0.5 && (
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            md={4}
+                                            lg={4}
+                                            style={{ marginRight: "1.325em" }}
+                                          >
+                                            <Typography
+                                              variant="body2"
+                                              component="p"
+                                              className="body-text-tag"
+                                            >
+                                              Nudity
+                                            </Typography>
+                                          </Grid>
+                                        )}
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
                               </React.Fragment>
                             )}
                           </Grid>
-                          <Grid item xs={12} md={6} lg={6}>
+                          <Grid item xs={12}>
                             <Typography
                               variant="h5"
                               component="h2"
                               className="heading-1"
                             >
-                              Predictions
+                              Disclaimer
                             </Typography>
-
                             <Typography
                               variant="body2"
                               component="p"
                               className="body-text-1"
                             >
-                              Safe for work
+                              AI guidance is indicative and human moderation
+                              shall supersede. Please report incorrect
+                              classification by flagging this image.
                             </Typography>
-                            {props.data && props.data.predictions.sfw > 0.75 && (
-                              <Typography
-                                variant="body2"
-                                component="p"
-                                className="prob-text-safe"
-                              >
-                                {Math.round(props.data.predictions.sfw * 100) +
-                                  "%"}
-                              </Typography>
-                            )}
-                            {props.data &&
-                              props.data.predictions.sfw < 0.75 &&
-                              props.data.predictions.sfw > 0.5 && (
-                                <Typography
-                                  variant="body2"
-                                  component="p"
-                                  className="prob-text-caution"
-                                >
-                                  {Math.round(
-                                    props.data.predictions.sfw * 100
-                                  ) + "%"}
-                                </Typography>
-                              )}
-                            {props.data && props.data.predictions.sfw < 0.5 && (
-                              <Typography
-                                variant="body2"
-                                component="p"
-                                className="prob-text-not-safe"
-                              >
-                                {Math.round(props.data.predictions.sfw * 100) +
-                                  "%"}
-                              </Typography>
-                            )}
                           </Grid>
                         </Grid>
                       </CardContent>
