@@ -182,6 +182,21 @@ html[data-theme="dark"] {
   box-shadow: none !important;
 }
 
+.button-style-2 {
+  background-color: var(--secondary-bg-color) !important;
+  box-shadow: none !important;
+}
+
+.button-style-3 {
+  background-color: var(--activity-color) !important;
+  box-shadow: none !important;
+}
+
+.button-style-4 {
+  background-color: var(--role-color) !important;
+  box-shadow: none !important;
+}
+
 .button-text-1 {
   color: var(--active-90) !important;
   font-family: "Lato-Bold" !important;
@@ -202,7 +217,7 @@ html[data-theme="dark"] {
 
 .body-text-tag {
   margin-top: 0.35em !important;
-  background-color: #FECC4D !important;
+  background-color: #fecc4d !important;
   color: #ffffff !important;
   font-family: "Lato-Regular" !important;
   font-size: 1.25em !important;
@@ -219,16 +234,15 @@ fieldset {
 }
 
 .body-text-1-caution {
-  color: #FECC4D !important;
+  color: #fecc4d !important;
   font-family: "Lato-Bold" !important;
   font-size: 1.25em !important;
   padding-top: 0.85em;
   padding-bottom: 0.5em;
-  
 }
 
 .body-text-1-not-safe {
-  color: #F30C0C !important;
+  color: #f30c0c !important;
   font-family: "Lato-Bold" !important;
   font-size: 1.25em !important;
   padding-top: 0.85em;
@@ -236,7 +250,7 @@ fieldset {
 }
 
 .body-text-1-safe {
-  color: #4AB98A !important;
+  color: #4ab98a !important;
   font-family: "Lato-Bold" !important;
   font-size: 1.25em !important;
   padding-top: 0.85em;
@@ -244,19 +258,19 @@ fieldset {
 }
 
 .image-caution {
-  background-image: url('../img/caution.png');
+  background-image: url("../img/caution.png");
   background-repeat: no-repeat;
   background-size: auto 100%;
 }
 
 .image-not-safe {
-  background-image: url('../img/shield.png');
+  background-image: url("../img/shield.png");
   background-repeat: no-repeat;
   background-size: auto 100%;
 }
 
 .image-safe {
-  background-image: url('../img/insurance.png');
+  background-image: url("../img/insurance.png");
   background-repeat: no-repeat;
   background-size: auto 100%;
 }
@@ -268,19 +282,19 @@ fieldset {
 }
 
 .prob-text-caution {
-  color: #FECC4D;
+  color: #fecc4d;
   font-family: "Lato-Regular" !important;
   font-size: 3em !important;
 }
 
 .prob-text-not-safe {
-  color: #F30C0C;
+  color: #f30c0c;
   font-family: "Lato-Regular" !important;
   font-size: 3em !important;
 }
 
 .prob-text-safe {
-  color: #4AB98A;
+  color: #4ab98a;
   font-family: "Lato-Regular" !important;
   font-size: 3em !important;
 }
@@ -288,6 +302,10 @@ fieldset {
 .uploaded-preview {
   max-width: 75%;
   max-height: 75%;
+}
+
+.move-right-1 {
+  margin-right: 5em;
 }
 
 /* Image profanity styles ends here */

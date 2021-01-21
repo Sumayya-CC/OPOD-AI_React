@@ -11,6 +11,7 @@ import logo from "./tarentologo.png";
 import TrainingData from "./TrainingData";
 import ImageProfanityContainer from "./imageProfanity/container/ImageProfanityContainer";
 import MapDetectorContainer from "./mapDetector/container/MapDetectorContainer";
+import TrainerContainer from "./mapTrainer/container/TrainerContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -129,6 +130,8 @@ export default function TabSelect(props) {
           <AntTab label="Image Profanity" {...a11yProps(2)} />
           {/*fourth tab*/}
           <AntTab label="India Map Detector" {...a11yProps(3)} />
+          {/*fifth tab*/}
+          <AntTab label="India Map Trainer" {...a11yProps(4)} />
         </AntTabs>
       </div>
 
@@ -173,7 +176,7 @@ export default function TabSelect(props) {
             </TabPanel>
           )}
 
-{value === 3 && (
+          {value === 3 && (
             <TabPanel
               // value={value} index={1} dir={theme.direction}>
               hidden={value === 0 && value === 1 && value === 2}
@@ -181,6 +184,17 @@ export default function TabSelect(props) {
               {" "}
               {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
               <MapDetectorContainer />{" "}
+              {/*adda nd edit training data set (incomplete)*/}
+            </TabPanel>
+          )}
+          {value === 4 && (
+            <TabPanel
+              // value={value} index={1} dir={theme.direction}>
+              hidden={value === 0 && value === 1 && value === 2}
+            >
+              {" "}
+              {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
+              <TrainerContainer />{" "}
               {/*adda nd edit training data set (incomplete)*/}
             </TabPanel>
           )}
