@@ -107,22 +107,22 @@ export default function TabSelect(props) {
 
   return (
     <div className={classes.root}>
-      <div style={{ backgroundColor: "white" }}>
+      <div style={{ backgroundColor: "white", display: "flex" }}>
         <img
           alt="iGOT"
           src={logo}
           style={{
-            width: "6%",
-            display: "inline-flex",
-            marginLeft: "5%",
-            marginTop: "1%",
+            width: "8em",
+            height: "20%",
+            marginLeft: "5em",
+            marginTop: "0.65em"
           }}
         />
         <AntTabs
           value={value}
           onChange={handleChange}
           aria-label="ant example"
-          style={{ marginLeft: "12%", marginTop: "-3%" }}
+          style={{ marginLeft: "12%" }}
         >
           <AntTab label="Profanity Check" {...a11yProps(0)} /> {/*first tab*/}
           <AntTab label="Training Data" {...a11yProps(1)} /> {/*second tab*/}

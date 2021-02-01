@@ -192,6 +192,10 @@ html[data-theme="dark"] {
   box-shadow: none !important;
 }
 
+.upper-canvas  {
+  position: relative !important;
+}
+
 .button-style-4 {
   background-color: var(--role-color) !important;
   box-shadow: none !important;

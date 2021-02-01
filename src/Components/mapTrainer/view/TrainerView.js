@@ -1,14 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Carousel from "react-material-ui-carousel";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+import { fabric } from "fabric";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +44,133 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TrainerView(props) {
   const classes = useStyles();
-  console.log(props);
+
+  const [canvas, setCanvas] = useState("");
+  // const canvasRef = useRef(null)
+
+  // const initCanvas = () => {
+  //   new fabric.Canvas("canvas", {
+  //     height: 400,
+  //     width: 400,
+  //     backgroundColor: "white",
+  //   });
+
+  const initCanvas = (props) => {
+    let canvas = new fabric.Canvas("canvas", {});
+
+    let rectangle, isDown, origX, origY;
+
+    let deleteIcon =
+      "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
+
+    var img = document.createElement("img");
+    img.src = deleteIcon;
+
+    canvas.on("mouse:down", function (o) {
+      var pointer = canvas.getPointer(o.e);
+      console.log(isDown);
+      if (!isDown) {
+        isDown = true;
+        origX = pointer.x;
+        origY = pointer.y;
+
+        fabric.Object.prototype.transparentCorners = false;
+        fabric.Object.prototype.cornerColor = "red";
+        fabric.Object.prototype.cornerStyle = "circle";
+
+        rectangle = new fabric.Rect({
+          left: origX,
+          top: origY,
+          fill: "",
+          stroke: "red",
+          strokeWidth: 1,
+          selectable: true,
+          transparentCorners: false,
+        });
+
+        canvas.add(rectangle);
+        canvas.setActiveObject(rectangle);
+      }
+    });
+
+    fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      offsetY: 16,
+      cursorStyle: "pointer",
+      mouseUpHandler: deleteObject,
+      render: renderIcon,
+      cornerSize: 24,
+    });
+
+    function deleteObject(eventData, target) {
+      var canvas = target.canvas;
+      canvas.remove(target);
+      canvas.requestRenderAll();
+    }
+
+    function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+      var size = this.cornerSize;
+      ctx.save();
+      ctx.translate(left, top);
+      ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+      ctx.drawImage(img, -size / 2, -size / 2, size, size);
+      ctx.restore();
+    }
+
+    canvas.on("mouse:move", function (o) {
+      if (!isDown) return false;
+      var pointer = canvas.getPointer(o.e);
+      if (origX > pointer.x) {
+        rectangle.set({ left: Math.abs(pointer.x) });
+      }
+      if (origY > pointer.y) {
+        rectangle.set({ top: Math.abs(pointer.y) });
+      }
+
+      rectangle.set({ width: Math.abs(origX - pointer.x) });
+      rectangle.set({ height: Math.abs(origY - pointer.y) });
+    });
+
+    canvas.on("mouse:up", function (o) {
+      isDown = false;
+    });
+
+    new fabric.Image.fromURL(
+      props.nextImage && props.nextImage.data.link,
+      function (oImg) {
+        // oImg.set({
+        //   evented: false,
+        // });
+        // oImg.scaleToWidth(canvas.width);
+        // oImg.scaleToWidth(canvas.height);
+        // canvas.add(oImg);
+        canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
+          scaleX: canvas.width / oImg.width,
+          scaleY: canvas.height / oImg.height,
+        });
+      }
+    );
+  };
+
+  // const canvasRef = useRef(null);
+
+  // const draw = (ctx) => {
+  //   ctx.beginPath();
+  //   ctx.rect(20, 20, 150, 100);
+  //   ctx.stroke();
+  // };
+
+  useEffect(() => {
+    setCanvas(initCanvas(props));
+  }, [props]);
+
+  // useEffect(() => {
+  //   const canvas = canvasRef.current;
+  //   const context = canvas.getContext("2d");
+  //   draw(context);
+  // }, [draw]);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -56,25 +178,14 @@ export default function TrainerView(props) {
       <Grid container spacing={0} justify="center">
         <Grid item xs={12} md={12} lg={12} align="center">
           <Paper className={classes.paper} elevation={0}>
-            <Carousel
-              next={() => props.getNextImage && props.getNextImage()}
-              prev={() => console.log("Previous")}
-              autoPlay={false}
-              navButtonsAlwaysInvisible={true}
-            >
-              <Card className={classes.customCard} id="resultCardMap">
-                <CardActionArea>
-                  <CardMedia
-                    className={classes.media}
-                    image={props.nextImage && props.nextImage.data.link}
-                    title="trainer preview"
-                  />
-                  <CardContent className="custom-card-content">
-                    <Grid container spacing={0}></Grid>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Carousel>
+            <canvas id="canvas" {...props} width="400" height="400" />
+            {/* <img
+              id="trainerImage"
+              className={classes.media}
+              src={props.nextImage && props.nextImage.data.link}
+              title="trainer preview"
+              alt="trainer data"
+            /> */}
           </Paper>
         </Grid>
 
@@ -90,7 +201,11 @@ export default function TrainerView(props) {
                   } ${i === "wrong" ? "button-style-3" : "button-style-1"} ${
                     i === "unrelated" ? "button-style-4" : "button-style-1"
                   }`}
-                  style={{ marginRight: "3em", marginLeft: "3em" }}
+                  style={{
+                    marginRight: "3em",
+                    marginLeft: "3em",
+                    marginTop: "3em",
+                  }}
                   onClick={() => {
                     let data;
                     switch (i) {
