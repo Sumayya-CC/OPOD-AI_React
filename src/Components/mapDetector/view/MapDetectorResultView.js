@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     "&:hover": { backgroundColor: "white" },
   },
+  errMsg: {
+    color: red,
+  },
 }));
 
 export default function MapDetectorResultView(props) {
@@ -70,104 +74,125 @@ export default function MapDetectorResultView(props) {
             </Box>
 
             <Container maxWidth="sm" className={classes.customContainer}>
-              {props.imgValue && props.imgValue.result !== null && (
-                <React.Fragment>
-                  <Card className={classes.customCard} id="resultCardMap">
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media}
-                        image={props.imgValue.result}
-                        title="result preview"
-                      />
-                      <CardContent className="custom-card-content">
-                        <Grid container spacing={0}>
-                          <Grid item xs={12} style={{ marginBottom: "2.5em"}}>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                              className="heading-1"
-                            >
-                              Guidance
-                            </Typography>
-
-                            {props.data &&
-                              props.data.payload.india_1
-                                .percentage_probability > 75.0 && (
-                                <React.Fragment>
-                                  <Typography
-                                    variant="body2"
-                                    component="p"
-                                    className="body-text-1-safe"
-                                  >
-                                    Safe to use
-                                  </Typography>
-                                </React.Fragment>
-                              )}
-                            {props.data &&
-                              props.data.payload.india_1
-                                .percentage_probability < 75.0 &&
-                              props.data.payload.india_1
-                                .percentage_probability > 50.0 && (
-                                <React.Fragment>
-                                  <Typography
-                                    variant="body2"
-                                    component="p"
-                                    className="body-text-1-caution"
-                                  >
-                                    Possibly incorrect
-                                  </Typography>
-                                </React.Fragment>
-                              )}
-                            {props.data &&
-                              props.data.payload.india_1
-                                .percentage_probability < 50.0 && (
-                                <React.Fragment>
-                                  <Typography
-                                    variant="body2"
-                                    component="p"
-                                    className="body-text-1-not-safe"
-                                  >
-                                    Not safe to use
-                                  </Typography>
-                                </React.Fragment>
-                              )}
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                              className="heading-1"
-                            >
-                              Disclaimer
-                            </Typography>
-                            <Typography
-                               variant="body2"
-                               component="p"
-                               className="body-text-1"
-                            >
-                              AI guidance is indicative and human moderation shall supersede.
-                              Please report incorrect classification by flagging this image.
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                  <Button
-                    mt={3}
-                    component="span"
-                    variant="contained"
-                    className="button-style-1 button-text-1"
-                    onClick={() => {
-                      domtoimage
-                        .toBlob(document.getElementById("resultCardMap"))
-                        .then((blob) => saveAs(blob, "resultMap"));
-                    }}
-                  >
-                    Download Result
-                  </Button>
-                </React.Fragment>
+              {props && !props.data.payload && props.data.error && (
+                <Typography
+                  variant="body2"
+                  component="p"
+                  className="body-text-1-not-safe"
+                >
+                  {props.data.message}
+                </Typography>
               )}
+
+              {props &&
+                props.data.payload &&
+                props.imgValue &&
+                props.imgValue.result !== null && (
+                  <React.Fragment>
+                    <Card className={classes.customCard} id="resultCardMap">
+                      <CardActionArea>
+                        <CardMedia
+                          className={classes.media}
+                          image={props.imgValue.result}
+                          title="result preview"
+                        />
+                        <CardContent className="custom-card-content">
+                          <Grid container spacing={0}>
+                            <Grid
+                              item
+                              xs={12}
+                              style={{ marginBottom: "2.5em" }}
+                            >
+                              <Typography
+                                variant="h5"
+                                component="h2"
+                                className="heading-1"
+                              >
+                                Guidance
+                              </Typography>
+
+                              {props.data &&
+                                props.data.payload &&
+                                props.data.payload.india_1
+                                  .percentage_probability > 75.0 && (
+                                  <React.Fragment>
+                                    <Typography
+                                      variant="body2"
+                                      component="p"
+                                      className="body-text-1-safe"
+                                    >
+                                      Safe to use
+                                    </Typography>
+                                  </React.Fragment>
+                                )}
+                              {props.data &&
+                                props.data.payload &&
+                                props.data.payload.india_1
+                                  .percentage_probability < 75.0 &&
+                                props.data.payload.india_1
+                                  .percentage_probability > 50.0 && (
+                                  <React.Fragment>
+                                    <Typography
+                                      variant="body2"
+                                      component="p"
+                                      className="body-text-1-caution"
+                                    >
+                                      Possibly incorrect
+                                    </Typography>
+                                  </React.Fragment>
+                                )}
+                              {props.data &&
+                                props.data.payload &&
+                                props.data.payload.india_1
+                                  .percentage_probability < 50.0 && (
+                                  <React.Fragment>
+                                    <Typography
+                                      variant="body2"
+                                      component="p"
+                                      className="body-text-1-not-safe"
+                                    >
+                                      Not safe to use
+                                    </Typography>
+                                  </React.Fragment>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography
+                                variant="h5"
+                                component="h2"
+                                className="heading-1"
+                              >
+                                Disclaimer
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                component="p"
+                                className="body-text-1"
+                              >
+                                AI guidance is indicative and human moderation
+                                shall supersede. Please report incorrect
+                                classification by flagging this image.
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                    <Button
+                      mt={3}
+                      component="span"
+                      variant="contained"
+                      className="button-style-1 button-text-1"
+                      onClick={() => {
+                        domtoimage
+                          .toBlob(document.getElementById("resultCardMap"))
+                          .then((blob) => saveAs(blob, "resultMap"));
+                      }}
+                    >
+                      Download Result
+                    </Button>
+                  </React.Fragment>
+                )}
             </Container>
           </Paper>
         </Grid>
