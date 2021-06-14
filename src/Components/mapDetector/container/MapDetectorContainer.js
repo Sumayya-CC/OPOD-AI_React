@@ -50,11 +50,29 @@ export default function MapDetectorContainer(props) {
     setMapData("");
     if (value && value !== undefined) {
       MapUploadService.mapUpload(value).then((res) => {
-        if (res.data.Code === 200 && res.data.Status !== "Not Success") {
+        if (
+          res.data.code === 200 &&
+          res.data.payload.india_classification.length &&
+          res.data.payload.india_classification[0].present
+        ) {
           setMapData(res.data);
         }
 
-        if (res.data.Code === 200 && res.data.Status === "Not Success") {
+        if (
+          res.data.code === 200 &&
+          !res.data.payload.india_classification.length
+        ) {
+          setMapData({
+            error: true,
+            message: "India map not found in the uploaded image!",
+          });
+        }
+
+        if (
+          res.data.code === 200 &&
+          res.data.payload.india_classification.length &&
+          !res.data.payload.india_classification[0].present
+        ) {
           setMapData({
             error: true,
             message: "India map not found in the uploaded image!",

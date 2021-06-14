@@ -56,10 +56,13 @@ export default function MapDetectorUploadView(props) {
       var output = document.getElementById("contained-button-file-2");
       output.src = reader.result;
     };
-    reader.readAsDataURL(event.target.files[0]);
-    setTimeout(() => {
-      setImgMapURL(reader);
-    }, 250);
+
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+      setTimeout(() => {
+        setImgMapURL(reader);
+      }, 250);
+    }
   }
 
   function currentFileMapExtract(value) {

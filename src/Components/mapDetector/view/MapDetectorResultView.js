@@ -113,24 +113,32 @@ export default function MapDetectorResultView(props) {
 
                               {props.data &&
                                 props.data.payload &&
-                                props.data.payload.india_1
-                                  .percentage_probability > 75.0 && (
+                                props.data.payload.india_classification &&
+                                props.data.payload.india_classification[0]
+                                  .present &&
+                                props.data.payload.india_classification[0]
+                                  .classification.correct_percentage >
+                                  props.data.payload.india_classification[0]
+                                    .classification.incorrect_percentage && (
                                   <React.Fragment>
                                     <Typography
                                       variant="body2"
                                       component="p"
                                       className="body-text-1-safe"
                                     >
-                                      Safe to use
+                                      Possibly correct
                                     </Typography>
                                   </React.Fragment>
                                 )}
                               {props.data &&
                                 props.data.payload &&
-                                props.data.payload.india_1
-                                  .percentage_probability < 75.0 &&
-                                props.data.payload.india_1
-                                  .percentage_probability > 50.0 && (
+                                props.data.payload.india_classification &&
+                                props.data.payload.india_classification[0]
+                                  .present &&
+                                props.data.payload.india_classification[0]
+                                  .classification.correct_percentage <
+                                  props.data.payload.india_classification[0]
+                                    .classification.incorrect_percentage && (
                                   <React.Fragment>
                                     <Typography
                                       variant="body2"
@@ -141,10 +149,15 @@ export default function MapDetectorResultView(props) {
                                     </Typography>
                                   </React.Fragment>
                                 )}
-                              {props.data &&
+                              {/* {props.data &&
                                 props.data.payload &&
-                                props.data.payload.india_1
-                                  .percentage_probability < 50.0 && (
+                                props.data.payload.india_classification &&
+                                props.data.payload.india_classification[0]
+                                  .present &&
+                                props.data.payload.india_classification[0]
+                                  .correct_percentage <
+                                  props.data.payload.india_classification[0]
+                                    .incorrect_percentage && (
                                   <React.Fragment>
                                     <Typography
                                       variant="body2"
@@ -154,7 +167,7 @@ export default function MapDetectorResultView(props) {
                                       Not safe to use
                                     </Typography>
                                   </React.Fragment>
-                                )}
+                                )} */}
                             </Grid>
                             <Grid item xs={12}>
                               <Typography
