@@ -313,3 +313,430 @@ fieldset {
 }
 
 /* Image profanity styles ends here */
+
+/* AI assistant */
+#zoomIn {
+  fill: var(--admin-table-background);
+  cursor: pointer;
+}
+
+#zoomOut {
+  fill: var(--admin-table-background);
+  cursor: pointer;
+}
+
+#zoomInBtn {
+  fill: var(--text-black);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#zoomOutBtn {
+  fill: var(--text-black);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* For map zoom ends here */
+
+/* For Waterfal chart starts here */
+
+.bar.total rect {
+  fill: #2b98ff;
+}
+
+.bar.positive rect {
+  fill: #3cb44b;
+}
+
+.bar.negative rect {
+  fill: #4364d8;
+}
+.border-bottom
+{
+  color: #FFFFFF;
+}
+
+.bar line.connector {
+  /* stroke: grey;
+  stroke-dasharray: 3; */
+}
+
+.bar text {
+  fill: white;
+  font-size: 8px;
+  /* font: 12px sans-serif; */
+  text-anchor: middle;
+}
+
+.axis text {
+  font-size: 8px;
+  /* font: 10px sans-serif; */
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  /* stroke: #000; */
+  shape-rendering: crispEdges;
+}
+
+.intent {
+  cursor: pointer;
+  padding: 10px 0px 0px;
+}
+
+.title{
+  cursor: pointer;
+}
+
+.intent.active {
+  background-color: var(--sidebar-active-item);
+}
+
+.associated-span {
+  height: 35px;
+  font-size: 13px;
+}
+
+.selected_grey {
+  background-color: grey;
+}
+
+/* For Waterfal chart ends here */
+
+/* others */
+.bottom 
+{
+  border-bottom: 0.8px solid  rgba(255, 255, 255, 0.3);
+}
+
+.push-bottom 
+{
+  width: 100%;
+  left: 0;
+  bottom: 0px;
+  position: absolute;
+}
+
+.wrongIntent{
+  background-color:#4448aa;
+  position:relative;
+  display:block;
+  cursor: pointer;
+}
+
+.rightIntent{
+
+  display:block;
+  cursor: pointer;
+  background-color: rgba(58, 236, 87, 0.3)
+}
+
+.Intent{
+  position:relative;
+  display:block;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1)
+}
+
+.defaultSpan{
+  background-color:rgba(255, 255, 255, 0.1);
+  display:block;
+
+}
+
+.rectangle {
+  display: inline-block;
+  width: 91px;
+  height: 40px;
+  background: black;
+}
+.stagingReactangle
+
+  {
+    display: inline-block;
+    width: 71px;
+    height: 40px;
+    background: black;
+}
+
+.badge-pill{
+  width: 91px;
+  height: 40px;
+  font-weight: var(--light-main-color);
+  font-weight: lighter;
+  font-size: 13px,
+}
+
+.dashboard-item1 {
+  background-color: var(--chart-background);
+  color: var(--tab-text);
+  padding-top: 10px;
+}
+.disabled{
+  background-color:rgba(255, 255, 255, 0.16);
+  color:'grey';
+}
+
+.roundSquares {
+  border-radius: 3px;
+  background:#6c757d;
+  width: 11px;
+  height: 11px;
+}
+.roundSquaresactive {
+  border-radius: 3px;
+  background:rgb(0, 146, 255) !important;
+  width: 11px;
+  height: 11px;
+}
+
+.roundSquaresactiveWhite {
+  border-radius: 3px;
+  background:white!important;
+  width: 11px;
+  height: 11px;
+}
+
+.btn.btn-primary:disabled
+{
+    background-color: var(--hover-color);
+    border: var(--border-color);
+
+    color:var(--main-text)
+}
+
+.hov:hover
+{
+  color:var(--red-color);
+  text-decoration: underline;
+}
+.modal-dialog
+{
+  
+  max-width: 1000px;
+  width: 750x;
+  height: 300px;
+  background: rgb(61, 60, 70);
+}
+
+.modal-footer
+{
+  background-color: var(--modal-footer-bg);
+}
+
+.dropDown-control
+{
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  margin-top: -8px;
+  cursor: pointer;
+  height: 40px;
+  color: white;
+  background-color: var(--dropdown-background);
+  background-clip: padding-box;
+  border: 1px solid var(--background-border-1);;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.dropdownMenu-control
+{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 4em;
+  padding: 1em 0em 0em 0em;
+  margin: 0.125rem 0 0;
+  font-size: 1em;
+  font-family: "Lato", sans-serif;
+  text-align: left;
+  list-style: none;
+  background-color: var(--chart-background);
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25em;
+}
+.labels
+{
+  color:rgba(255, 255, 255, 0.4)
+}
+
+.subText
+{
+  color: var(--sub-text)
+}
+.cards
+{
+  border:grey;
+  height:115px;
+  width:292px;
+  background-color:#313131
+}
+.head_disabled
+{
+  font-style:bold;
+  color:grey;
+}
+
+.notes
+{
+  border:grey;
+  height:80px;
+  background-color:rgba(0, 0, 0, 0.4);
+  width:200px
+}
+
+.chart_size
+{
+  height:56px;
+  width:1600px;
+}
+
+.envSelected
+{
+  background-color: rgb(86, 83, 109);
+}
+.box
+{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.addNew
+{
+  color:white !important;
+  
+}
+
+#logDetails
+{
+  padding: 0px,0px,0px,0px !important;
+}
+
+.create {
+  padding-left: 0em !important;
+}
+
+.model{
+  padding-left:120px;
+  color: white;
+  font-size: 12px;
+  color:rgba(255, 255, 255, 0.4)
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 700%;
+  left: 55%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  }
+
+  .datasets{
+    padding: 0 0 0 0 !important;
+  }
+
+ .butn
+ {
+   margin-right: 0em !important;
+   width: 144px;
+   padding-left: 30px;
+   text-align: center !important;
+ }
+ .buttn
+ {
+  width:765px;
+   text-align:right;
+   padding-right:0px !important;
+ }
+/* styles for the chat widget starts here */
+
+.lib-chat-head
+{
+  background-color: rgb(0, 146, 255) !important;
+  visibility: hidden;
+}
+
+.lib-chat-header[_ngcontent-c1]
+{
+  background-color: rgb(0, 146, 255) !important; 
+  color:white;
+}
+
+.lib-chat-body
+{
+
+  background-color: rgb(61, 60, 70) !important;
+}
+
+/* .messages-container[_ngcontent-c2]
+{
+  background-color: rgb(61, 60, 70) !important;
+}
+.chat-msg.recieved
+{
+  background-color: rgb(0, 146, 255) !important;
+  padding-top: 6px;
+  text-align: center;
+  width:140px;
+  float: left;
+  margin-top: 3px;
+  border-radius: 0px 30px 30px 30px;
+  color: white !important;
+}
+
+.chat-msg.sent
+{
+  padding-top: 6px;
+  text-align: center;
+  margin-top: 3px;
+  width: 140px;
+  margin-left: auto;
+  border-radius: 30px 0px 30px 30px;
+  margin-right: 2px;
+  background-color: rgb(0, 146, 255) !important;
+  color: white !important;
+} */
+
+.msg-input ng-pristine ng-invalid ng-touched
+{
+  background-color:rgba(255, 255, 255, 0.08) ;
+  color: white;
+}
+
+.lib-chat-footer
+{
+  border-top: none !important;
+  background-color:rgba(255, 255, 255, 0.08) !important;
+}
+
+
+/* styles for animations starts here */
+@keyframes play60 {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: -6540px 0px;
+  }
+}
+.shapeshifter {
+  animation-duration: 2000ms;
+  animation-timing-function: steps(60);
+  animation-iteration-count: infinite;
+  width: 109px;
+  height: 108px;
+  background-color:transparent;
+  background-repeat: repeat;
+}
+.shapeshifter.play {
+  animation-name: play60;
+}
+
+/* Ai assistant ends here *?
