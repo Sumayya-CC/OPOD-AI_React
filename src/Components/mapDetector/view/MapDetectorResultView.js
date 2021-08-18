@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
 import { red } from "@material-ui/core/colors";
+import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,11 @@ const useStyles = makeStyles((theme) => ({
   },
   errMsg: {
     color: red,
+  },
+  largeIcon: {
+    width: 45,
+    height: 30,
+    cursor: "pointer",
   },
 }));
 
@@ -191,19 +197,53 @@ export default function MapDetectorResultView(props) {
                         </CardContent>
                       </CardActionArea>
                     </Card>
-                    <Button
-                      mt={3}
-                      component="span"
-                      variant="contained"
-                      className="button-style-1 button-text-1"
-                      onClick={() => {
-                        domtoimage
-                          .toBlob(document.getElementById("resultCardMap"))
-                          .then((blob) => saveAs(blob, "resultMap"));
-                      }}
-                    >
-                      Download Result
-                    </Button>
+                    <Grid container xs={12}>
+                      <Grid item xs={8}>
+                        <Icon
+                          color="primary"
+                          className={classes.largeIcon}
+                          onClick={(e) =>
+                            props.getMapFeedBack(e, 1, props.data.id)
+                          }
+                        >
+                          thumb_up
+                        </Icon>
+                        <Icon
+                          color="secondary"
+                          className={classes.largeIcon}
+                          onClick={(e) =>
+                            props.getMapFeedBack(e, 0, props.data.id)
+                          }
+                        >
+                          thumb_down
+                        </Icon>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Button
+                          mt={3}
+                          component="span"
+                          variant="contained"
+                          className="button-style-1 button-text-1 custom-margin-left-1"
+                          onClick={() => {
+                            domtoimage
+                              .toBlob(document.getElementById("resultCardMap"))
+                              .then((blob) => saveAs(blob, "resultMap"));
+                          }}
+                        >
+                          Download Result
+                        </Button>
+                      </Grid>
+                    </Grid>
+
+                    {props && props.notification && (
+                      <Typography
+                        variant="body2"
+                        component="p"
+                        className="body-text-1-safe"
+                      >
+                        {props.notification.message}
+                      </Typography>
+                    )}
                   </React.Fragment>
                 )}
             </Container>

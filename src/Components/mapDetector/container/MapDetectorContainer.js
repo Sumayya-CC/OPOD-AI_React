@@ -29,6 +29,7 @@ export default function MapDetectorContainer(props) {
   const [mapValue, setMapValue] = useState("");
   const [mapData, setMapData] = useState("");
   const [imgMapValue, setImgMapValue] = useState("");
+  const [notification, setNotification] = useState("");
 
   function getMapFileData(value) {
     setTimeout(() => {
@@ -40,6 +41,23 @@ export default function MapDetectorContainer(props) {
     setTimeout(() => {
       setImgMapValue(value);
     }, 600);
+  }
+
+  function getMapFeedBack(e, value, id) {
+    e.preventDefault();
+
+    let data = {
+      id: id,
+      feedback: value,
+    };
+
+    MapUploadService.sendFeedBack(data).then((res) => {
+      if (res.data.code === 200) {
+        setNotification({
+          message: "Feedback posted!",
+        });
+      }
+    });
   }
 
   useEffect(() => {
@@ -101,7 +119,12 @@ export default function MapDetectorContainer(props) {
         {/* Left side */}
         <Grid item xs={12} md={6} lg={6}>
           {mapData && (
-            <MapDetectorResultView data={mapData} imgValue={imgMapValue} />
+            <MapDetectorResultView
+              data={mapData}
+              imgValue={imgMapValue}
+              getMapFeedBack={getMapFeedBack}
+              notification={notification}
+            />
           )}
         </Grid>
       </Grid>

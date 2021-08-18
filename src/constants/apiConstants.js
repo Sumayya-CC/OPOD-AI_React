@@ -5,4 +5,5 @@ export const APIS = {
     MAP_TRAINER_FETCH_NEXT: "fetchNextImage",
     MAP_TRAINER_FETCH_CLASSES: "fetchClasses",
     MAP_TRAINER_SAVE_DATA: "saveTrainingData",
+    MAP_FEEDBACK: "thor-igot/image/feedback"
 }

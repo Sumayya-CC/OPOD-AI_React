@@ -182,6 +182,10 @@ html[data-theme="dark"] {
   box-shadow: none !important;
 }
 
+.custom-margin-left-1 {
+  margin-left: 0.5rem !important;
+}
+
 .button-style-2 {
   background-color: var(--secondary-bg-color) !important;
   box-shadow: none !important;
@@ -192,7 +196,7 @@ html[data-theme="dark"] {
   box-shadow: none !important;
 }
 
-.upper-canvas  {
+.upper-canvas {
   position: relative !important;
 }
 
