@@ -1,17 +1,16 @@
-import React, {Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import axios from 'axios';
 import CloseIcon from '@material-ui/icons/Close';
 import ChatIcon from '@material-ui/icons/Chat';
-import io from 'socket.io-client';
+import io from 'socket.io-client'
 import SendIcon from '@material-ui/icons/Send';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-// import './bootstrap.min.css';
+import { Card, Button } from 'react-bootstrap';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+
 
 const socket = io(process.env.REACT_APP_VEGA_ROUTER_URL);
 console.log(process.env.REACT_APP_VEGA_ROUTER_URL);
-let reply = "Sorry! couldn't reply properly";
+let reply = "Here's what i found";
 var buttonDiv = document.createElement('div');
 buttonDiv.id = "buttonDiv";
 let contacts = document.createElement('div')
@@ -20,12 +19,15 @@ contacts.id = 'contact-list';
 let discussions = document.createElement('div')
 discussions.className = 'discussions';
 discussions.id = 'discussion-list';
+let courses = document.createElement('div')
+courses.className = 'courses';
+courses.id = 'course-list';
 
 class ChatWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Sorry couldn't reply properly!", domain: 'sandbox', message: '', data: {}, activeBots: [], allBots: [], showReponse:'', showAvatar: true, buttons: {}
+      text: "Here's what i found", domain: 'Vega', message: '', data: {}, activeBots: [], allBots: [], showReponse:'', showAvatar: true, buttons: {}
     };
     this.startArticle = this.startArticle.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -37,46 +39,104 @@ class ChatWidget extends Component {
   }
   socketConnect() 
   {
-    console.log(process.env.REACT_APP_VEGA_ROUTER_URL)
     socket.on("bot_uttered", (data) => {
       if (data.text === '' || data.text === undefined) {
-        reply = "Sorry couldn't reply properly!"
-        this.setState({ text: reply })
+
       }
       else if (data.buttons === '' || data.buttons === undefined) {
-        reply = data.type;
 
         if(data.type === 'contact')
         {
+          reply = "Here's what i found"
+          this.setState({ text: reply })
+          if(document.getElementById('contact-list'))
+          {
+            document.getElementById('contact-list').innerHTML = '';
+          }
           var b = document.getElementById("chatWindow");
           for (var i = 0; i < data.text.length; i++) 
         {
-          console.log(data.text[i])
           this.contact((data.text[i]))
         }
         b.appendChild(contacts);
         }
+        else if (!(data.type))
+        {
+          this.setState({ text: data.text })
+        }
         else if(data.type === 'discussions')
         {
+
+          if(document.getElementById('discussion-list'))
+          {
+            document.getElementById('discussion-list').innerHTML = '';
+          }
+         
+          reply = "Here's what i found"
+          this.setState({ text: reply })
           var b = document.getElementById("chatWindow");
           for (var i = 0; i < data.text.length; i++) 
         {
           this.discussions((data.text[i]))
         }
         b.appendChild(discussions);
+        this.updateScroll()
         }
+        else if(data.type === 'updiscussions')
+        {
+
+          if(document.getElementById('discussion-list'))
+          {
+            document.getElementById('discussion-list').innerHTML = '';
+          }
+         
+          reply = "Here's what i found"
+          this.setState({ text: reply })
+          var b = document.getElementById("chatWindow");
+          for (var i = 0; i < data.text.length; i++) 
+        {
+          this.updiscussions((data.text[i]))
+        }
+        b.appendChild(discussions);
+        this.updateScroll()
+        }
+        else if(data.type === 'course')
+        {
+          reply = "Here's what i found"
+          this.setState({ text: reply })
+          if(document.getElementById('course-list'))
+          {
+            document.getElementById('course-list').innerHTML = '';
+          }
+          
+          var b = document.getElementById("chatWindow");
+          for (var i = 0; i < data.text.length; i++) 
+        {
+          this.course((data.text[i]))
+        }
+        b.appendChild(courses);
+        this.updateScroll()
+        }
+        else if(data.type === 'tags')
+        {
+          this.list(data.type, data.text, "msg-remote")
+        }
+        else if(data.type === 'list')
+        {
+          this.list(data.type, data.text, "msg-remote")
+        }
+        // else if(data.type === 't_tags')
+        // {
+        //   console.log(data.text)
+        //   this.setState({ text: data.text})
+        // }
         else if(data.type === 'direct')
         {
           reply = data.text;
           this.setState({ text: reply })
-          // this.startArticle(this .state.text, 'msg-remote');
         }
-        // this.setState({ text: reply })
       }
       else {
-        console.log(data)
-        reply = data.text;
-        this.setState({ text: reply })
         var b = document.getElementById("chatWindow");
         for (var i = 0; i < data.buttons.length; i++) 
         {
@@ -85,7 +145,51 @@ class ChatWidget extends Component {
         b.appendChild(buttonDiv);
       }
     });
-    this.setState({ text: "Sorry! couldn't reply properly" })
+    this.setState({ text: "Here's what i found" })
+  }
+
+  list(type,value,cname)
+  {
+    this.setState({text: "Here's what i found"})
+    var less = document.createElement('span');
+    less.id = "readless";
+    less.className = "readMore";
+    var tmpr = document.createTextNode('Read less ▲');
+    var more = document.createElement('span');
+    more.id = "readmore";
+    more.className = "readMore";
+    var tmp = document.createTextNode("Read more ▼");
+    if(type === 'tags')
+    {
+      var heading = "The following are the trending tags: \n";
+      value.shift();
+      value = this.formatResponse(value)
+    }
+    else
+    {
+      var heading = "The competencies are as follows: \n";
+      value = this.formatResponseList(value)
+    }
+    value = String(value).replaceAll(",",'')
+    value = heading + "\n" + value;
+    var actRespone = value;
+    var shortRes = value.substr(0, 50);
+    shortRes = shortRes + "...";
+    this.setState({showReponse:shortRes});
+    var b = document.getElementById("chatWindow");
+    var a = document.createElement("article");
+    a.className = "msg-container";
+    a.classList.add(cname);
+    a.id = "msg-0";
+    var c = document.createElement("div");
+    c.className = "msg-box";
+    b.appendChild(a);
+    a.appendChild(c);
+    c.appendChild(document.createTextNode(this.state.showReponse));
+    more.appendChild(tmp);
+    c.appendChild(more);
+    more.onclick = (e) => {this.setState({showReponse:actRespone});c.innerText= actRespone; less.appendChild(tmpr); c.appendChild(less); this.updateScroll()}
+    less.onclick = (e) =>{this.setState({showReponse:shortRes}); c.innerText= shortRes; c.appendChild(more); this.updateScroll()}
   }
 
   contact(data)
@@ -100,13 +204,13 @@ class ChatWidget extends Component {
     cname.className = 'cname';
     var fn = '';
     var ln = '';
-    if(data[0].personalDetails.firstname !== null || data[0].personalDetails.firstname !== "")
+    if(data && data.profileDetails && data.profileDetails.personalDetails && data.profileDetails.personalDetails.firstname !== null || data.profileDetails.personalDetails.firstname !== "")
     {
-      fn = data[0].personalDetails.firstname.charAt(0);
+      fn = data.profileDetails.personalDetails.firstname.charAt(0);
     }
-    if(data[0].personalDetails.surname !== null || data[0].personalDetails.surname !== "" )
+    if(data && data.profileDetails && data.profileDetails.personalDetails && data.profileDetails.personalDetails.surname !== null || data.profileDetails.personalDetails.surname !== "" )
     {
-      ln = data[0].personalDetails.surname.charAt(0);
+      ln = data.profileDetails.personalDetails.surname.charAt(0);
     }
     cname.innerText = fn + ln;
     cheader.appendChild(cname);
@@ -114,10 +218,10 @@ class ChatWidget extends Component {
     let cbody = document.createElement('div');
     cbody.className = 'cbody';
     let ctitle = document.createElement('div');
-    ctitle.innerText = data[0].personalDetails.firstname + " " + data[0].personalDetails.surname;
+    ctitle.innerText = data.profileDetails.personalDetails.firstname + " " + data.profileDetails.personalDetails.surname;
     cbody.appendChild(ctitle);
     let cdept = document.createElement('div');
-    cdept.innerText = data[0].employmentDetails.departmentName
+    cdept.innerText = data.profileDetails.employmentDetails.departmentName
     cbody.appendChild(cdept);
     cardBody.appendChild(cbody);
     contacts.appendChild(cardBody)
@@ -174,6 +278,82 @@ class ChatWidget extends Component {
     dcard.appendChild(dcardBody);
     discussions.appendChild(dcard)
   }
+
+  updiscussions(data)
+  {
+    let dcard = document.createElement('div');
+    dcard.className = 'discussion-card';
+    let dcardBody = document.createElement('div');
+    dcardBody.className = 'dcard-body';
+    let dname = document.createElement('div');
+    dname.className = 'dname';
+    if(data.user.displayname !== null)
+    {
+      // var names = data.user.fullname.split(" ");
+      // var firstname = names[0];
+      // var lastname = names[1];
+      var name = data.user.displayname.charAt(0);
+      dname.innerText = name;
+    }
+    else
+    {
+      dname.innerText = "NA";
+    }
+    dcardBody.appendChild(dname);
+    let dtitle = document.createElement('div');
+    dtitle.innerText = data.topic.title;
+    dtitle.className = 'dcard-title';
+    dcardBody.appendChild(dtitle);
+    let dtype = document.createElement('div');
+    dtype.innerText = data.category.name;
+    dtype.className = 'dtype';
+    dcardBody.appendChild(dtype);
+    let dvotes = document.createElement('div');
+    dvotes.innerText = data.downvotes + data.upvotes + " Votes";
+    dvotes.className = 'dvotes';
+    dcardBody.appendChild(dvotes);
+    dcard.appendChild(dcardBody);
+    discussions.appendChild(dcard)
+  }
+
+  course(data)
+  {
+    let coursecard = document.createElement('div');
+    coursecard.className = 'course-card';
+    let courseBody = document.createElement('div');
+    courseBody.className = 'course-body';
+    let courseheader = document.createElement('div');
+    courseheader.className = 'courseheader';
+    let courseicon = document.createElement('div');
+    courseicon.className = 'courseicon';
+    courseicon.innerHTML = "<img src="+data.appIcon+" width='322px', height='130px'>";
+    let coursecreatericon = document.createElement('div');
+    coursecreatericon.className = 'coursecreatericon';
+    coursecreatericon.innerHTML="<img src="+data.creatorLogo+">";
+    courseheader.appendChild(courseicon);
+    courseheader.appendChild(coursecreatericon);
+    courseBody.appendChild(courseheader)
+    let co_body = document.createElement('div');
+    co_body.className = 'co-body';
+    let coursetitle = document.createElement('div');
+    coursetitle.className = "course-title";
+    coursetitle.innerText = data.name;
+    co_body.appendChild(coursetitle);
+    let co_creater = document.createElement('div');
+    co_creater.className = "course-creator"
+    if(data.creatorContacts)
+    {
+      co_creater.innerText = data.creatorContacts.split('"name":"')[1].slice(0, -3);
+    }
+    else
+    {
+      co_creater.innerText = "";
+    }
+   
+    co_body.appendChild(co_creater);
+    courseBody.appendChild(co_body);
+    courses.appendChild(courseBody)
+  }
   tags(value)
   {
     var a = document.createElement("button");
@@ -184,9 +364,8 @@ class ChatWidget extends Component {
     buttonDiv.appendChild(a);
   }
   startArticle(value, cname) {
-    if(cname === "msg-remote" && String(value).length > 50)
+    if(cname === "msg-remote" && String(value).length > 100)
     {
-      console.log(value)
       this.setState({showReponse : value})
       var actRespone = value;
       var less = document.createElement('span');
@@ -200,10 +379,9 @@ class ChatWidget extends Component {
       if(typeof(value)!== 'string')
       {
         // var heading = "There are " +value[0] + " items: \n";
-        var heading = "The following are the items: \n";
+        var heading = "The following are the active users: \n";
         value.shift();
         value = this.formatResponse(value)
-        console.log(value);
         value = String(value).replaceAll(",",'')
         value = heading + "\n" + value;
         actRespone = value;
@@ -246,12 +424,17 @@ class ChatWidget extends Component {
   {
     for(var i = 0; i<value.length; i++)
     {
-      
-      console.log(value[i]);
-   
+      value[i] = i+1 + ") " + value[i].value + "\n";
+    }
+    return value
+  }
+
+  formatResponseList(value)
+  {
+    for(var i = 0; i<value.length; i++)
+    {
       value[i] = i+1 + ") " + value[i] + "\n";
     }
-    console.log(value)
     return value
   }
   handleClick = event => {
@@ -266,8 +449,6 @@ class ChatWidget extends Component {
     this.state.data["sender"] = "Varsha";
     this.state.data["message"] = message;
     axios.post(process.env.REACT_APP_SANDBOX_URL, this.state.data).then(response => {
-      console.log(response)
-      console.log(response.data !== '')
       if (response.data) {
         if (response.data[0]) {
           this.setState({ text: response.data[0]["custom"]["blocks"][0]["text"] }, () => { this.getResponse(); })
@@ -302,18 +483,15 @@ class ChatWidget extends Component {
       this.setState({ message: '' })
     }
     else {
-      console.log(this.state.message)
       e.preventDefault();
       this.startArticle(this.state.message, "msg-self")
       this.updateScroll()
-      console.log(this.state.domain)
       if (this.state.domain === 'Sand') {
-        console.log(this.state.domain)
         this.restCall(this.state.message)
       }
       else {
-        console.log("enter there the code")
-        socket.emit('user_uttered', { "mail": "mahuli@varsha.com", "message": this.state.message, "endpoint": this.state.domain, "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJxZGVvM2JTU28zU2pUZktSRmVnajkyR282QTQwWDY0cXB4dWdCZUVxekNnIn0.eyJqdGkiOiJhNDA3ZWViYi1lOTJkLTRmODgtYTc4NC05YWRhNTRjYWUwYzIiLCJleHAiOjE2MjY5MzA1NjUsIm5iZiI6MCwiaWF0IjoxNjI2ODQ0MTY1LCJpc3MiOiJodHRwczovL2lnb3Qtc3RhZ2UuaW4vYXV0aC9yZWFsbXMvc3VuYmlyZCIsImF1ZCI6InBvcnRhbCIsInN1YiI6ImY6ODc3ZGQ1ODMtMzYyYi00YmU3LWEzMWYtOGNkMDI4OTZhZjg4OjdiYTIxOTUzLTZiZjktNDNlOS1iMjc4LTE5YjI2NDUyNjgyNSIsInR5cCI6IkJlYXJlciIsImF6cCI6InBvcnRhbCIsIm5vbmNlIjoiY2ZlMTNjYTgtNjM2OS00YzBjLThiZGMtNzFhMTU4ZjU1NDRmIiwiYXV0aF90aW1lIjoxNjI2ODQzNjY3LCJzZXNzaW9uX3N0YXRlIjoiNjFhYTMxZDAtNGUwMi00YjYzLThmNzItZDUwNjg3NTcwNmZiIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sIm5hbWUiOiJUZXN0ICBNb2JpbGUgVXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3Rtb2JpbGV1c2VyXzcxZGMiLCJnaXZlbl9uYW1lIjoiVGVzdCAiLCJmYW1pbHlfbmFtZSI6Ik1vYmlsZSBVc2VyIiwiZW1haWwiOiJ0ZSoqKioqKioqKioqKipAeW9wbWFpbC5jb20ifQ.iwBkYwX-dLj-oby1bPvaR-7dOtg_2AIPmQinZ1SBdXdYPLgIk_SGxFJdD0LLVErrg867RMuVUiuYFjnzZaf1xpB5FOWSRqXDHllwVWIJhjloR7jp0nNe-P5QY5cRMzyXsgJnGPqSWosFowYxb1REBbWUjsbduFuriBMhVI18H2E4_K2XUw_w_FWyWlfiYGVA4YkeuxlKVb10Srh0_30rw5xn0YR047jfaTahqWSCopBCa-CIi_maRwSxlUzxYjqfwhzXSkbvuKx4ll19Cfv6uQ7_XsgnDffgAEJ2zE9KBR0K9wBSkFryShJ4Z63p5WId076ZI7nBZ9_JPyf4MWV8BQ"});
+        socket.emit('user_uttered', { "mail": "mahuli@varsha.com", "message": this.state.message, "endpoint": this.state.domain, "jwt": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJxZGVvM2JTU28zU2pUZktSRmVnajkyR282QTQwWDY0cXB4dWdCZUVxekNnIn0.eyJqdGkiOiJjYzBlYjVkMy01YzM4LTRlNDQtYTVhNy0yNzAwYWVmM2RhOTAiLCJleHAiOjE2MzI0NjU0NDQsIm5iZiI6MCwiaWF0IjoxNjMyMzc5MDQ0LCJpc3MiOiJodHRwczovL2lnb3Qtc3RhZ2UuaW4vYXV0aC9yZWFsbXMvc3VuYmlyZCIsImF1ZCI6ImFkbWluLWNsaSIsInN1YiI6ImY6ODc3ZGQ1ODMtMzYyYi00YmU3LWEzMWYtOGNkMDI4OTZhZjg4OjdiYTIxOTUzLTZiZjktNDNlOS1iMjc4LTE5YjI2NDUyNjgyNSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijc0NTk1M2Y2LTBiMjktNDdmYS1iNDdlLWRkZTM2YjkwYzQwZiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6e30sIm5hbWUiOiJUZXN0ICBNb2JpbGUgVXNlciIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3Rtb2JpbGV1c2VyXzcxZGMiLCJnaXZlbl9uYW1lIjoiVGVzdCAiLCJmYW1pbHlfbmFtZSI6Ik1vYmlsZSBVc2VyIiwiZW1haWwiOiJ0ZSoqKioqKioqKioqKipAeW9wbWFpbC5jb20ifQ.OKP_zwMf1_-B2aQI0UHIuT69jy288UDEJZIHUtoPNt6ZC0Ur95LfqMX4u6G7cSo8OXmhc7aIDF8_YpzR8GwkoXQ6RLN8Wfz2FP4KRQVfSg46nCXKxVIjE8mj71pdZD9w7Y2JBy2TNxtV-YtVmg1AUAvZ7Tc5-oxdABX0yd1M4909lP2z-2spnxqq1qzoj6GCuAIe_f8ewgokfVx5mX3tgkWlg7zFqJi-0z8rOJKj1X_iSEjSx9YIPk0agiGnZNmE-XnK1IPviY5R4ICFbYi9RNtKuMfwEDKDbF1bt_qwcpXDJqtAuXpzLzWUTr4muEmIG5uZ6jkbFa-ThUw4S0JYkg", 
+        wid: "fb61adf6-cd48-40e9-81d9-1ff77bc09f91", uid: "586", username: "amritanischal_qh84"});
         setTimeout(() => { this.getResponse() }, 2000);
       }
       this.setState({ message: '' })
@@ -339,29 +517,20 @@ class ChatWidget extends Component {
   render() {
 
     return (
-
-        <div>
-        <Typography component="div">
-          <Box fontWeight="fontWeightBold" mt={5} ml={10} className="heading-1">
-            AI assistant
-          </Box>
-        </Typography>
-        <Grid container justify="flex-end" alignItems="flex-end" style={{right: "2rem", bottom: "5rem" , marginTop: '100px'}}>
-        <div style={{marginRight: "20px" }}>
+      <div className="chatbox-display">
         <section className="chatbox" id="chatbox">
           <div className="chat-header" >
-              <Grid container spacing={0}>
-                <Grid>
+            <div className="row">
+              <div className="col-md-10">
                 <p name="bots" id="bots" className="select">
-                <ChatIcon></ChatIcon>
-                </p>     
-                </Grid>
-                <Grid>
-                <p name="bots" id="bots" className="vega">
-                Vega
-                </p>     
-                </Grid>
-            </Grid>
+                  <ChatIcon></ChatIcon>
+                  Vega
+                </p>
+              </div>
+              <div className="col-md-2 pull right">
+                <CloseIcon style={{ cursor: "pointer", marginTop: "17px" }} onClick={this.myFunctionClose}></CloseIcon>
+              </div>
+            </div>
 
           </div>
           <section className="chat-window" id="chatWindow">
@@ -371,24 +540,21 @@ class ChatWidget extends Component {
             <input
               className="input"
               type="textarea"
-              autoComplete="off"
+              autocomplete="off"
               placeholder="Type a message"
               name="message"
               id="message"
               value={this.state.message}
               onChange={this.handleClick} />
             <button style={{ backgroundColor: "transparent", background: "transparent" }} onClick={(e) => this.sendMessage(e)} disabled={!this.state.message}>
-            <SendIcon color='primary' onClick={this.updateScroll} />
+              <SendIcon color='primary' onClick={this.updateScroll} />
             </button>
           </form>
         </section>
         <div>
-          <img src="/img/image.png" alt="Avatar" id="avatar" style={{marginLeft : "280px"}}>
+          <img src="/img/image.png" alt="Avatar" onClick={this.myFunction} id="avatar">
           </img>
         </div>
-      </div>
-         
-        </Grid>
       </div>
     );
   }

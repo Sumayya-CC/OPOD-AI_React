@@ -149,7 +149,12 @@ max-height: 60px;
 .chat-input input[good] + button path {
   fill: white;
 }
-
+.chatbox-display {
+  background-color: transparent;
+  margin-left: 1500px;
+  color: white;
+  margin-top: 200px;
+}
 .showbuttons
 {
   background: rgb(61, 60, 70)!important;
