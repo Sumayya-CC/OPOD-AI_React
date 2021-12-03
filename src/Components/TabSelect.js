@@ -13,7 +13,7 @@ import ImageProfanityContainer from "./imageProfanity/container/ImageProfanityCo
 import MapDetectorContainer from "./mapDetector/container/MapDetectorContainer";
 import TrainerContainer from "./mapTrainer/container/TrainerContainer";
 import ChatWidget from "./AI assistant/ChatWidget";
-
+import Welcome1 from "./Text Profanity Real Time/TextProfanity1";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -135,6 +135,7 @@ export default function TabSelect(props) {
           <AntTab label="India Map Trainer" {...a11yProps(4)} />
           {/*sixth tab*/}
           <AntTab label="AI assistant" {...a11yProps(5)} /> 
+          <AntTab label="Text Profanity - Real Time Feedback" {...a11yProps(6)} />
         </AntTabs>
 
         
@@ -214,6 +215,18 @@ export default function TabSelect(props) {
               {/*adda nd edit training data set (incomplete)*/}
             </TabPanel>
           )}
+          {value === 6 && (
+            <TabPanel
+              // value={value} index={1} dir={theme.direction}>
+              hidden={value === 0 && value === 1 && value === 2}
+            >
+              {" "}
+              {/*displaying 3nd tab by hiding 1st and 2nd tabs*/}
+              <Welcome1 />{" "}
+              {/*adda nd edit training data set (incomplete)*/}
+            </TabPanel>
+          )}
+         
         </SwipeableViews>
       </div>
     </div>
